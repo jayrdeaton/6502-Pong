@@ -1,10 +1,10 @@
 ; =============================================================================
-;   6502.inc — External include file for the 6502 system
+;   6502.inc - External include file for the 6502 system
 ; =============================================================================
 ;
 ;   CPU:       WDC 65C02S
 ;   BIOS:      v1.5
-;   Assembler: ca65 (cc65 toolchain) — uses := for absolute symbols
+;   Assembler: ca65 (cc65 toolchain) - uses := for absolute symbols
 ;
 ;   Include this file in external projects to access Kernal routines,
 ;   IO hardware registers, system variables, and useful constants.
@@ -24,13 +24,13 @@
 ;                 because Wozmon builds its input buffer there)
 ;   $0500-$05FF   BAS_TOKBUF: BASIC's tokenizing scratch
 ;   $0600-$07FF   FS sector buffer (clobbered by any FS/St routine call)
-;   $0800-$7FFF   Program RAM (30 KB — load address for user code)
+;   $0800-$7FFF   Program RAM (30 KB - load address for user code)
 ;   $8000-$83FF   IO 1: Banked RAM Low  (256 × ~1 KB banks)
 ;   $8400-$87FF   IO 2: Banked RAM High (256 × ~1 KB banks)
 ;   $8800-$881F   IO 3: RTC (DS1511Y)
 ;   $8C00-$8C07   IO 4: Storage (CompactFlash, 8-bit IDE)
 ;   $9000-$9003   IO 5: Serial (R65C51 ACIA)
-;   $9400-$940F   IO 6: GPIO (65C22 VIA — keyboard & joysticks)
+;   $9400-$940F   IO 6: GPIO (65C22 VIA - keyboard & joysticks)
 ;   $9800-$981C   IO 7: Sound (SID / ARMSID)
 ;   $9C00-$9C01   IO 8: Video (TMS9918 / pico9918)
 ;   $A000-$A0FF   Kernal Jump Table (stable entry points)
@@ -45,14 +45,14 @@
 ;   -------------
 ;   On RESET the BIOS probes all eight IO slots, initializes detected
 ;   hardware, and auto-selects video or serial console.  If neither is
-;   found, IO_MODE is left unchanged (no halt — cartridges with their
+;   found, IO_MODE is left unchanged (no halt - cartridges with their
 ;   own display hardware can still boot).  A startup beep plays (if SID
 ;   is present) for audible feedback, then BOOT_VECTOR ($035B) is
-;   checked — if non-zero, execution jumps there (cartridge takeover).
+;   checked - if non-zero, execution jumps there (cartridge takeover).
 ;   Otherwise a console check halts if no video/serial is found, then
 ;   the splash screen and boot menu are displayed.  ENTER launches
 ;   BASIC; ESC enters the Monitor.  A 5-second timeout auto-boots BASIC.
-;   The splash is drawn on whichever console is active — centred on the
+;   The splash is drawn on whichever console is active - centred on the
 ;   40-column screen, or left-aligned as plain text over serial.
 ;
 ;   GRACEFUL DEGRADATION
@@ -68,7 +68,7 @@
 ;   Cartridges overlay $C000-$FFFF (BASIC, Monitor, Wozmon, vectors).
 ;   The Kernal ($A000-$B7FF) and character set ($B800-$BFFF) remain
 ;   accessible.  Use KernalInit ($A078) to initialize all hardware and
-;   return via RTS — interrupts are left disabled so the cart can set
+;   return via RTS - interrupts are left disabled so the cart can set
 ;   up its own handlers first.  See usage patterns in the BIOS README.
 ;
 ;   IO_MODE
@@ -104,10 +104,10 @@
 ; use STR_PTR and CF_BUF_PTR/CF_LBA as parameters to Kernal calls.
 ; Locations $3A-$FF are free for user programs.
 
-STR_PTR             := $02               ; 2 bytes — String pointer (used by FsLoadFile, FsSaveFile, FsDeleteFile, etc.)
-CF_BUF_PTR          := $24               ; 2 bytes — CF sector data buffer pointer
-CF_LBA              := $26               ; 4 bytes — CF 28-bit LBA address (little-endian)
-XFER_PTR            := $2A               ; 2 bytes — XModem transfer data pointer (source for XModemSave, dest for XModemLoad)
+STR_PTR             := $02               ; 2 bytes - String pointer (used by FsLoadFile, FsSaveFile, FsDeleteFile, etc.)
+CF_BUF_PTR          := $24               ; 2 bytes - CF sector data buffer pointer
+CF_LBA              := $26               ; 4 bytes - CF 28-bit LBA address (little-endian)
+XFER_PTR            := $2A               ; 2 bytes - XModem transfer data pointer (source for XModemSave, dest for XModemLoad)
 
 ; Safe zero page range for user programs:
 ; $3A-$FF (198 bytes free)
@@ -119,16 +119,16 @@ XFER_PTR            := $2A               ; 2 bytes — XModem transfer data poin
 ;   SECTION 2: SYSTEM VARIABLES ($0300-$03FF)
 ; =============================================================================
 
-IRQ_PTR             := $0300             ; 2 bytes — IRQ handler vector (writable; default: internal Irq handler)
-BRK_PTR             := $0302             ; 2 bytes — BRK handler vector (writable; default: enters Monitor)
-NMI_PTR             := $0304             ; 2 bytes — NMI handler vector (writable; default: RTI)
+IRQ_PTR             := $0300             ; 2 bytes - IRQ handler vector (writable; default: internal Irq handler)
+BRK_PTR             := $0302             ; 2 bytes - BRK handler vector (writable; default: enters Monitor)
+NMI_PTR             := $0304             ; 2 bytes - NMI handler vector (writable; default: RTI)
 
-IO_MODE             := $0306             ; 1 byte  — Console output mode (bit 0: 0=video, 1=serial)
-VID_CURSOR_X        := $0307             ; 1 byte  — Video cursor column (0-39)
-VID_CURSOR_Y        := $0308             ; 1 byte  — Video cursor row (0-23)
+IO_MODE             := $0306             ; 1 byte  - Console output mode (bit 0: 0=video, 1=serial)
+VID_CURSOR_X        := $0307             ; 1 byte  - Video cursor column (0-39)
+VID_CURSOR_Y        := $0308             ; 1 byte  - Video cursor row (0-23)
 
-HW_PRESENT          := $030D             ; 1 byte  — Hardware present bitmask (set during boot probe)
-CF_DISK             := $030F             ; 1 byte  — Current CF disk bank (0–255); base LBA = CF_DISK × FS_DISK_SECTORS; reset to 0 on boot
+HW_PRESENT          := $030D             ; 1 byte  - Hardware present bitmask (set during boot probe)
+CF_DISK             := $030F             ; 1 byte  - Current CF disk bank (0-255); base LBA = CF_DISK × FS_DISK_SECTORS; reset to 0 on boot
 
 ; HW_PRESENT bit definitions (bit order matches IO slot numbers):
 HW_RAM_L            = %00000001          ; Bit 0: RAM card low  (IO 1, $8000-$83FF)
@@ -136,7 +136,7 @@ HW_RAM_H            = %00000010          ; Bit 1: RAM card high (IO 2, $8400-$87
 HW_RTC              = %00000100          ; Bit 2: RTC card      (IO 3, DS1511Y)
 HW_CF               = %00001000          ; Bit 3: Storage card   (IO 4, CompactFlash)
 HW_SC               = %00010000          ; Bit 4: Serial card    (IO 5, R65C51)
-HW_GPIO             = %00100000          ; Bit 5: GPIO card      (IO 6, 65C22 VIA — keyboard/joysticks)
+HW_GPIO             = %00100000          ; Bit 5: GPIO card      (IO 6, 65C22 VIA - keyboard/joysticks)
 HW_SID              = %01000000          ; Bit 6: Sound card     (IO 7, SID/ARMSID)
 HW_VID              = %10000000          ; Bit 7: Video card     (IO 8, TMS9918/pico9918)
 
@@ -149,21 +149,21 @@ BRK_X               := $0314             ; Saved X register
 BRK_Y               := $0315             ; Saved Y register
 BRK_SP              := $0316             ; Saved stack pointer
 
-XFER_REMAIN         := $0317             ; 2 bytes — XModem byte count (output from XModemLoad; input to XModemSave)
-XFER_IO_SAVE        := $0319             ; 1 byte  — Saved IO_MODE during XModem transfer (internal use)
+XFER_REMAIN         := $0317             ; 2 bytes - XModem byte count (output from XModemLoad; input to XModemSave)
+XFER_IO_SAVE        := $0319             ; 1 byte  - Saved IO_MODE during XModem transfer (internal use)
 
 ; RTC scratch (used by RtcWriteDate to pass century):
 RTC_BUF_CENT        := $030B             ; Century value for RtcReadDate / RtcWriteDate
 
 ; Cartridge / boot redirect vector:
-BOOT_VECTOR         := $035B             ; 2 bytes — Boot redirect address (0=normal boot)
+BOOT_VECTOR         := $035B             ; 2 bytes - Boot redirect address (0=normal boot)
                                          ;   Set after KernalInit to redirect Reset flow
                                          ;   KernalInit zeroes this; write after init returns
-FS_IO_ADDR          := $037F             ; 2 bytes — Load/save target address for FsLoadFileAddr / FsSaveFileAddr
-FS_FILE_SIZE        := $034A             ; 2 bytes — File size in bytes (set by caller for FsSaveFileAddr; populated by FsLoadFileAddr)
+FS_IO_ADDR          := $037F             ; 2 bytes - Load/save target address for FsLoadFileAddr / FsSaveFileAddr
+FS_FILE_SIZE        := $034A             ; 2 bytes - File size in bytes (set by caller for FsSaveFileAddr; populated by FsLoadFileAddr)
 
 ; Program image handoff (v1.3):
-PRG_IMAGE_END       := $038E             ; 2 bytes — End address of a program image placed at
+PRG_IMAGE_END       := $038E             ; 2 bytes - End address of a program image placed at
                                          ;   PROGRAM_START by a loader running outside BASIC
                                          ;   (e.g. the Monitor's L command); 0 = none.
                                          ;   KernalInit zeroes it; BASIC consumes and re-zeroes it
@@ -177,7 +177,7 @@ PRG_IMAGE_END       := $038E             ; 2 bytes — End address of a program 
 ;   SECTION 3: KEY MEMORY LOCATIONS
 ; =============================================================================
 
-INPUT_BUFFER        := $0200             ; $0200-$02FF — 256-byte ring buffer (keyboard/serial input)
+INPUT_BUFFER        := $0200             ; $0200-$02FF - 256-byte ring buffer (keyboard/serial input)
 PROGRAM_START       := $0800             ; User programs and BASIC programs load here
 ;                                        ; Program space extends to $7FFF (30 KB)
 MEMORY_TOP          := $8000             ; First address past usable RAM (IO space starts here)
@@ -274,7 +274,7 @@ SidPlayNote         := $A033             ; Play note on a SID voice
                                          ;   Modifies: A
 
 SidSilence          := $A036             ; Silence all 3 SID voices (gate off only)
-                                         ;   Frequencies are left intact — the envelope release
+                                         ;   Frequencies are left intact - the envelope release
                                          ;   rings the tone out.  Zeroing freq would freeze the
                                          ;   waveform and decay a DC offset (audible thump)
                                          ;   Skips silently if no SID is fitted
@@ -294,7 +294,7 @@ SidSetVolume        := $A039             ; Set SID master volume
 ;   StReadSector / StWriteSector operate on the selected bank automatically.
 ;   Pass null-terminated "NAME.EXT" string via STR_PTR ($02-$03).
 ;   Use FsLoadFileAddr / FsSaveFileAddr for load-to-address transfers.
-;   The extension is inert — nothing in the BIOS branches on it, so .PRG, .BAS
+;   The extension is inert - nothing in the BIOS branches on it, so .PRG, .BAS
 ;   and .FOO behave identically.  What a file means is decided by the routine
 ;   that loads it, never by its name.
 ;   All FS routines use $0600-$07FF as a 512-byte sector buffer.
@@ -320,8 +320,8 @@ InitKB              := $A045             ; Initialize VIA for keyboard input
                                          ;   Modifies: A
 
 ; --- Joysticks ---
-;   Both ports are ACTIVE LOW — each line is pulled up through 1K and grounded
-;   by its switch — and both routines return the port read raw.  So a held
+;   Both ports are ACTIVE LOW - each line is pulled up through 1K and grounded
+;   by its switch - and both routines return the port read raw.  So a held
 ;   button is a 0 bit and an untouched stick reads $FF:
 ;
 ;     Bit:  7   6   5   4   3   2   1   0
@@ -329,7 +329,7 @@ InitKB              := $A045             ; Initialize VIA for keyboard input
 ;
 ;   Test a direction with:  lda ... / and #%00010000 / beq @UpHeld
 ;
-;   Neither routine checks HW_PRESENT — with no GPIO card fitted they read a
+;   Neither routine checks HW_PRESENT - with no GPIO card fitted they read a
 ;   floating bus and the value is meaningless.  Test HW_GPIO first if the card
 ;   may be absent.  (BASIC's JOY() does this and reports $FF.)
 ;
@@ -432,7 +432,7 @@ KernalVersion       := $A07B             ; Get BIOS version
                                          ;   Out: A = major version, X = minor version
 
 ; --- Disk-banking & addressed storage (v1.1) ---
-;   CF_DISK ($030F) selects the current disk bank (0–255).
+;   CF_DISK ($030F) selects the current disk bank (0-255).
 ;   All FS routines, StReadSector, and StWriteSector address the selected
 ;   bank automatically.  Bank changes survive until the next reset.
 
@@ -451,15 +451,15 @@ FsSaveFileAddr      := $A081             ; Save FS_FILE_SIZE bytes from FS_IO_AD
 
 FsFormatDisk        := $A084             ; Zero the current disk's directory (erases all 16 entries)
                                          ;   Out: C=0 success, C=1 write error
-                                         ;   No confirmation prompt — caller is responsible
+                                         ;   No confirmation prompt - caller is responsible
                                          ;   Modifies: A, X, Y
 
 FsSetDisk           := $A087             ; Select the current CF disk bank
-                                         ;   In: A = disk number (0–255) → stored in CF_DISK ($030F)
+                                         ;   In: A = disk number (0-255) → stored in CF_DISK ($030F)
                                          ;   Modifies: Flags
 
 FsGetDisk           := $A08A             ; Get the current CF disk bank
-                                         ;   Out: A = CF_DISK value (0–255)
+                                         ;   Out: A = CF_DISK value (0-255)
                                          ;   Modifies: Flags, A
 
 FsPrintDisk         := $A08D             ; Print "DISK n" + CRLF via Chrout (decimal, no leading zeros)
@@ -521,8 +521,8 @@ RTC_CTRL_B          := $880F             ; Control Register B
 RTC_RAM_ADDR        := $8810             ; NVRAM address register
 RTC_RAM_DATA        := $8813             ; NVRAM data register
 ; Control Register B bits:
-RTC_CTRL_B_TE       := %10000000         ; Transfer Enable — set to inhibit clock updates during write
-; Month register ($8805) — the upper 3 bits are oscillator/SQW control, not month data.
+RTC_CTRL_B_TE       := %10000000         ; Transfer Enable - set to inhibit clock updates during write
+; Month register ($8805) - the upper 3 bits are oscillator/SQW control, not month data.
 ; Always mask with RTC_MON_MASK when reading the month, and preserve these bits on write.
 RTC_MON_MASK        := %00011111         ; Month value occupies the low 5 bits
 RTC_MON_EOSC        := %10000000         ; Oscillator Start/Stop (0 = oscillator running)
@@ -532,26 +532,26 @@ RTC_MON_BB32        := %00100000         ; Battery-backup 32 kHz SQW enable (1 =
 ; --- CompactFlash / Storage (IO 4: $8C00-$8C07) ---
 ;   8-bit IDE (True IDE) mode.  The BIOS issues Set Features $01 at boot
 ;   to enable 8-bit data transfers.
-ST_DATA             := $8C00             ; R/W — Data register
-ST_ERROR            := $8C01             ; Read — Error register
-ST_FEATURE          := $8C01             ; Write — Feature register
-ST_SECT_CNT         := $8C02             ; R/W — Sector count
-ST_LBA_0            := $8C03             ; R/W — LBA bits 0-7
-ST_LBA_1            := $8C04             ; R/W — LBA bits 8-15
-ST_LBA_2            := $8C05             ; R/W — LBA bits 16-23
-ST_LBA_3            := $8C06             ; R/W — LBA bits 24-27 + drive/mode
-ST_STATUS           := $8C07             ; Read — Status register
-ST_CMD              := $8C07             ; Write — Command register
+ST_DATA             := $8C00             ; R/W - Data register
+ST_ERROR            := $8C01             ; Read - Error register
+ST_FEATURE          := $8C01             ; Write - Feature register
+ST_SECT_CNT         := $8C02             ; R/W - Sector count
+ST_LBA_0            := $8C03             ; R/W - LBA bits 0-7
+ST_LBA_1            := $8C04             ; R/W - LBA bits 8-15
+ST_LBA_2            := $8C05             ; R/W - LBA bits 16-23
+ST_LBA_3            := $8C06             ; R/W - LBA bits 24-27 + drive/mode
+ST_STATUS           := $8C07             ; Read - Status register
+ST_CMD              := $8C07             ; Write - Command register
 
 ; CF Status Register bits:
 ST_STATUS_ERR       := %00000001         ; Error occurred
 ST_STATUS_IDX       := %00000010         ; Index mark
 ST_STATUS_CORR      := %00000100         ; Corrected data
-ST_STATUS_DRQ       := %00001000         ; Data request — ready for data transfer
+ST_STATUS_DRQ       := %00001000         ; Data request - ready for data transfer
 ST_STATUS_DSC       := %00010000         ; Drive seek complete
 ST_STATUS_DWF       := %00100000         ; Drive write fault
 ST_STATUS_RDY       := %01000000         ; Drive ready
-ST_STATUS_BSY       := %10000000         ; Drive busy — all other bits invalid while set
+ST_STATUS_BSY       := %10000000         ; Drive busy - all other bits invalid while set
 
 ; CF Error Register bits:
 ST_ERR_AMNF         := %00000001         ; Address mark not found
@@ -591,11 +591,11 @@ XMODEM_STARTRETRY   = 60                 ; Retries waiting for initial connect (
 
 ; --- Serial Card (R65C51 ACIA) (IO 5: $9000-$9003) ---
 ;   Default config after InitSC: 8-N-1, 19200 baud, RX IRQ enabled
-SC_DATA             := $9000             ; R/W — Data register
-SC_RESET            := $9001             ; Write — Programmatic reset (write any value)
-SC_STATUS           := $9001             ; Read — Status register
-SC_CMD              := $9002             ; R/W — Command register
-SC_CTRL             := $9003             ; R/W — Control register
+SC_DATA             := $9000             ; R/W - Data register
+SC_RESET            := $9001             ; Write - Programmatic reset (write any value)
+SC_STATUS           := $9001             ; Read - Status register
+SC_CMD              := $9002             ; R/W - Command register
+SC_CTRL             := $9003             ; R/W - Control register
 
 ; Serial Status Register bits:
 SC_STATUS_IRQ       := %10000000         ; Interrupt occurred
@@ -743,7 +743,7 @@ SID_NOTE_AS3        = $0F46              ; ~233 Hz
 SID_NOTE_Bb3        = SID_NOTE_AS3
 SID_NOTE_B3         = $102F              ; ~247 Hz
 
-; Octave 4 (C4=261.63 Hz .. B4=493.88 Hz) — middle octave
+; Octave 4 (C4=261.63 Hz .. B4=493.88 Hz) - middle octave
 SID_NOTE_C4         = $1125              ; ~262 Hz (Middle C)
 SID_NOTE_CS4        = $122A              ; ~277 Hz
 SID_NOTE_Db4        = SID_NOTE_CS4
@@ -817,7 +817,7 @@ SID_NOTE_Ab7        = SID_NOTE_GS7
 SID_NOTE_A7         = $E6B0              ; ~3520 Hz
 SID_NOTE_AS7        = $F467              ; ~3729 Hz
 SID_NOTE_Bb7        = SID_NOTE_AS7
-; Note: B7 (~3951 Hz = $102F0) exceeds the 16-bit SID register — not defined
+; Note: B7 (~3951 Hz = $102F0) exceeds the 16-bit SID register - not defined
 
 ; --- Video Card (TMS9918 / pico9918) (IO 8: $9C00-$9C01) ---
 ;   Text mode: 40 columns × 24 rows.  Name table at VRAM $0000 (960 bytes).
@@ -825,9 +825,9 @@ SID_NOTE_Bb7        = SID_NOTE_AS7
 ;   To write to a VRAM address: write low byte to VC_REG, then (high | $40) to VC_REG.
 ;   To read from a VRAM address: write low byte to VC_REG, then high byte to VC_REG.
 ;   Register writes: write data byte to VC_REG, then (reg# | $80) to VC_REG.
-VC_DATA             := $9C00             ; R/W — VRAM data (auto-increments address)
-VC_REG              := $9C01             ; Write — Address/register port
-VC_STATUS           := $9C01             ; Read — Status register
+VC_DATA             := $9C00             ; R/W - VRAM data (auto-increments address)
+VC_REG              := $9C01             ; Write - Address/register port
+VC_STATUS           := $9C01             ; Read - Status register
 
 ; =============================================================================
 ;   SECTION 6: USEFUL CONSTANTS

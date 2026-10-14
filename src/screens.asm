@@ -1,13 +1,13 @@
 ; =============================================================================
-;   screens.asm — Pong title/mode-select, new-game/serve, win and pause UI
+;   screens.asm - Pong title/mode-select, new-game/serve, win and pause UI
 ; =============================================================================
 
 .segment "CART"
 
 ; -----------------------------------------------------------------------------
-; DrawTitleScreen — draw the title/mode-select screen in Graphics I. Always
+; DrawTitleScreen - draw the title/mode-select screen in Graphics I. Always
 ; a full wipe and redraw, never layered on top of whatever was there before
-; (the same discipline NewGame follows) — this runs both at initial boot
+; (the same discipline NewGame follows) - this runs both at initial boot
 ; (over an already-blank screen) and again after a game over (over a live
 ; win-overlay box and final board state), and only clearing at the latter
 ; call site would leave this routine unsafe to call from anywhere else.
@@ -83,7 +83,7 @@ DrawTitleScreen:
   jmp DrawString
 
 ; -----------------------------------------------------------------------------
-; DrawMenuCursor — draw a ">" beside the option GAME_MODE currently selects
+; DrawMenuCursor - draw a ">" beside the option GAME_MODE currently selects
 ; (MODE_1P = row 12/"ONE PLAYER", MODE_2P = row 13/"TWO PLAYERS"), erasing
 ; both possible positions first so it can never leave a stale second cursor
 ; behind regardless of which way the selection just changed.
@@ -110,9 +110,9 @@ DrawMenuCursor:
   jmp DrawTile
 
 ; -----------------------------------------------------------------------------
-; WaitForModeSelect — a real up/down-navigable menu, not a direct-select
+; WaitForModeSelect - a real up/down-navigable menu, not a direct-select
 ; key: up always highlights ONE PLAYER (the top option), down always
-; highlights TWO PLAYERS (the bottom option) — with only two options,
+; highlights TWO PLAYERS (the bottom option) - with only two options,
 ; "which one am I choosing" is unambiguous from the direction alone, so
 ; there's no separate cursor-position state to track beyond GAME_MODE
 ; itself. The A button confirms whichever is currently highlighted.
@@ -169,8 +169,8 @@ WaitForModeSelect:
   rts
 
 ; -----------------------------------------------------------------------------
-; NewGame — reset for a fresh game (also used when restarting after a game
-; over, back through the title/mode-select flow). Does not touch GAME_MODE —
+; NewGame - reset for a fresh game (also used when restarting after a game
+; over, back through the title/mode-select flow). Does not touch GAME_MODE -
 ; whichever mode was already selected stays selected. Always a full wipe and
 ; redraw, never an incremental one: a sibling cartridge in this ecosystem had
 ; a real bug where a partial restart-redraw left stale content on screen.
@@ -179,7 +179,7 @@ NewGame:
   stz P1_SCORE
   stz P2_SCORE
   stz NEXT_P1
-  stz NEXT_P2              ; DIR_NONE — KernalInit does not zero this range,
+  stz NEXT_P2              ; DIR_NONE - KernalInit does not zero this range,
   stz CPU_TICK               ; so a cold boot could otherwise start with a
                               ; stale/garbage decision-parity or direction
 
@@ -219,7 +219,7 @@ NewGame:
   rts
 
 ; -----------------------------------------------------------------------------
-; ServeBall — reset the ball to center court with a fresh pseudo-random
+; ServeBall - reset the ball to center court with a fresh pseudo-random
 ; direction, undoing any speed escalation from the previous rally. Called
 ; from NewGame and, once per point scored, from physics.asm's Tick.
 ; -----------------------------------------------------------------------------
@@ -267,9 +267,9 @@ ServeBall:
   rts
 
 ; -----------------------------------------------------------------------------
-; DrawWinOverlay — draw the win screen: a bordered box on top of the final
+; DrawWinOverlay - draw the win screen: a bordered box on top of the final
 ; board state, same overlay technique as the sibling Snake cartridge's
-; game-over screen. Does not change GAME_STATE itself — the caller
+; game-over screen. Does not change GAME_STATE itself - the caller
 ; (physics.asm's Tick) owns that transition.
 ; -----------------------------------------------------------------------------
 DrawWinOverlay:
@@ -368,7 +368,7 @@ DrawWinOverlay:
   jmp Sound_Win
 
 ; -----------------------------------------------------------------------------
-; DrawPauseMessage — draw a short paused prompt at row 23, just below the
+; DrawPauseMessage - draw a short paused prompt at row 23, just below the
 ; bottom wall. Matches the sibling Snake cartridge's pause message.
 ; -----------------------------------------------------------------------------
 DrawPauseMessage:

@@ -1,5 +1,5 @@
 ; =============================================================================
-;   Pong.asm — cartridge entry point and main loop
+;   Pong.asm - cartridge entry point and main loop
 ; =============================================================================
 ;   Classic Pong for the AC6502 family, built as a standalone ROM cartridge
 ;   (6502-CRT template). Boots directly, no BASIC. One-player (vs a CPU
@@ -28,7 +28,7 @@
 .include "src/physics.asm"
 
 ; =============================================================================
-;   CartReset — cartridge entry point
+;   CartReset - cartridge entry point
 ; =============================================================================
 CartReset:
   ldx #$ff
@@ -104,7 +104,7 @@ MainLoop:
   jmp MainLoop
 
 ; =============================================================================
-;   IRQ / NMI handlers — cartridge owns the vectors, so it must supply these.
+;   IRQ / NMI handlers - cartridge owns the vectors, so it must supply these.
 ;   Both just dispatch through the RAM vectors KernalInit already configured
 ;   (default keyboard-scanning IRQ handler, no-op NMI).
 ; =============================================================================
@@ -116,7 +116,7 @@ NmiTrampoline:
   jmp (NMI_PTR)
 
 ; =============================================================================
-;   CPU Vectors — cart owns $FFFA-$FFFF
+;   CPU Vectors - cart owns $FFFA-$FFFF
 ; =============================================================================
 
 .segment "VECTORS"

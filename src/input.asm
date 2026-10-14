@@ -1,13 +1,13 @@
 .segment "CART"
 
 ; =============================================================================
-;   input.asm — joystick-first, keyboard-fallback polling
+;   input.asm - joystick-first, keyboard-fallback polling
 ; =============================================================================
 ;   Built on 6502-Lib's shared core/input.asm (PollJoyCombined/PollJoy1/
-;   PollJoy2/DrainKeyboardCombined/DrainKeyboardSplit — see that file for the
+;   PollJoy2/DrainKeyboardCombined/DrainKeyboardSplit - see that file for the
 ;   primitives themselves). This file only composes them into Pong's own
 ;   MENU_DIR/NEXT_P1/NEXT_P2/START_PRESSED, per the shared priority rule:
-;   joystick first — if the joystick shows ANY direction this poll, use ONLY
+;   joystick first - if the joystick shows ANY direction this poll, use ONLY
 ;   the joystick's direction(s) this poll and don't consult the keyboard at
 ;   all; only fall back to the keyboard's drained result when the joystick
 ;   shows NOTHING this poll (including when no GPIO card is fitted at all).
@@ -17,7 +17,7 @@
 ;
 ;   A cartridge owns the whole shell while it's running, so keyboard input
 ;   here can't collide with a BASIC prompt the way it could in a full-system
-;   UI — the concern that originally motivated joystick-only design doesn't
+;   UI - the concern that originally motivated joystick-only design doesn't
 ;   apply to a cartridge. Two players sharing one keyboard use the standard
 ;   split: WASD is the physical left-hand cluster (P1), arrow keys are the
 ;   physical right-hand cluster (P2), so their hands don't collide.
@@ -25,8 +25,8 @@
 ;   Two separate polling routines, not one, because they mean different
 ;   things by "combine the joysticks":
 ;     - PollMenuInput (title/mode-select): joystick 1 and 2 are OR'd
-;       together — whoever is holding a controller can navigate, since no
-;       player has been assigned to a port yet — and keyboard fallback is
+;       together - whoever is holding a controller can navigate, since no
+;       player has been assigned to a port yet - and keyboard fallback is
 ;       DrainKeyboardCombined (WASD or arrows, whichever was pressed most
 ;       recently, no player distinction, since there's no player split yet
 ;       either).
@@ -35,10 +35,10 @@
 ;       NEXT_P2, and joystick 2 is instead OR'd into P1's input too, so a
 ;       single-player controller works from either port (same reasoning
 ;       as the sibling Snake cartridge). Combining both ports for P1 in
-;       2P mode would be wrong — it would let either player move the
-;       other's paddle — so 2P mode keeps them strictly separate. Keyboard
+;       2P mode would be wrong - it would let either player move the
+;       other's paddle - so 2P mode keeps them strictly separate. Keyboard
 ;       fallback is DrainKeyboardSplit: WASD drives P1's fallback ONLY,
-;       arrow keys drive P2's fallback ONLY, unconditionally — never
+;       arrow keys drive P2's fallback ONLY, unconditionally - never
 ;       combined/either-or, for the same "don't let one player move the
 ;       other's paddle" reason. Unlike joystick 2, arrow keys are never
 ;       OR'd into P1 in 1P mode: WASD is always P1's keyboard fallback,
@@ -58,13 +58,13 @@
 ;   for movement until the TTL counts down to 0. This bookkeeping runs
 ;   every tick regardless of joystick state (so Chrin never backs up and
 ;   the TTL stays accurate), but is only ever *applied* to NEXT_P1/NEXT_P2
-;   on a tick where that player's joystick showed nothing — joystick still
+;   on a tick where that player's joystick showed nothing - joystick still
 ;   wins outright the instant it's touched.
 ; =============================================================================
 
 .include "../../6502-Lib/core/input.asm"
 
-; Keyboard hold-decay window (PollInput only — see header above). At
+; Keyboard hold-decay window (PollInput only - see header above). At
 ; BASE_DELAY (~80ms/tick) 4 ticks is ~320ms of bridged gap; at MIN_DELAY
 ; (~30ms/tick, the speed-escalation floor) it's ~120ms. Long enough to
 ; ride out a dropped or slow typematic character between polls, short
@@ -73,12 +73,12 @@
 KB_HOLD_TTL_INIT = 4
 
 ; -----------------------------------------------------------------------------
-; PollMenuInput — title/mode-select screen only. Combines joystick 1 and 2
+; PollMenuInput - title/mode-select screen only. Combines joystick 1 and 2
 ; for up/down (MENU_DIR), with WASD/arrow-key keyboard fallback (whichever
 ; was pressed most recently) when the joystick shows nothing. A button OR
 ; space bar sets START_PRESSED, edge-detected into FIRE_EDGE same as
 ; PollInput. No sticky state: MENU_DIR reflects only what's resolved THIS
-; poll (no hold-decay here — the menu doesn't need "feels held", only
+; poll (no hold-decay here - the menu doesn't need "feels held", only
 ; gameplay's paddle does).
 ; -----------------------------------------------------------------------------
 PollMenuInput:
@@ -138,14 +138,14 @@ PollMenuInput:
   rts
 
 ; -----------------------------------------------------------------------------
-; PollInput — gameplay only. Joystick 1 always drives P1; joystick 2 drives
-; P2 in 2P mode, or is OR'd into P1 in 1P mode (see header) — this joystick
+; PollInput - gameplay only. Joystick 1 always drives P1; joystick 2 drives
+; P2 in 2P mode, or is OR'd into P1 in 1P mode (see header) - this joystick
 ; routing is unchanged from before keyboard fallback existed. WASD/arrow-key
 ; fallback (with hold-decay, see header) layers on top per player, only
 ; applied on a tick where that player's joystick shows nothing. NEXT_P1/
-; NEXT_P2 are sticky "last known direction" — only overwritten when a
+; NEXT_P2 are sticky "last known direction" - only overwritten when a
 ; joystick bit or a valid keyboard hold is actually seen this poll, never
-; reset to DIR_NONE — Tick (physics.asm) reads them each tick to move the
+; reset to DIR_NONE - Tick (physics.asm) reads them each tick to move the
 ; paddles.
 ; -----------------------------------------------------------------------------
 PollInput:

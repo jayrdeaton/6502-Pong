@@ -1,5 +1,5 @@
 ; =============================================================================
-;   zeropage.inc — Pong zero-page variables and game constants
+;   zeropage.inc - Pong zero-page variables and game constants
 ; =============================================================================
 ;   Zero page $3A-$FF is free for a program that has taken the machine over
 ;   (see SECTION 1 of 6502.inc). 6502.cfg defines no RAM/BSS segment, so

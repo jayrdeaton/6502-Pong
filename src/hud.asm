@@ -1,5 +1,5 @@
 ; =============================================================================
-;   hud.asm — HUD text/digit-drawing primitives (score, messages, title text)
+;   hud.asm - HUD text/digit-drawing primitives (score, messages, title text)
 ; =============================================================================
 ;   Graphics I has no Kernal-compatible 40-column text mode, so all HUD text
 ;   is drawn tile-by-tile straight into the name table via DrawTile/EraseTile

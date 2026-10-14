@@ -1,5 +1,5 @@
 ; =============================================================================
-;   tiles.asm — Graphics I tile codes, colors, and custom 8x8 tile patterns
+;   tiles.asm - Graphics I tile codes, colors, and custom 8x8 tile patterns
 ; =============================================================================
 ;   Same approach as the Snake cartridge: each custom tile code lives in its
 ;   own color group (group = code>>3) so it gets an independent fg/bg pair

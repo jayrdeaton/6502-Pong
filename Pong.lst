@@ -3,7 +3,7 @@ Main file   : Pong.asm
 Current file: Pong.asm
 
 000000r 1               ; =============================================================================
-000000r 1               ;   Pong.asm — cartridge entry point and main loop
+000000r 1               ;   Pong.asm - cartridge entry point and main loop
 000000r 1               ; =============================================================================
 000000r 1               ;   Classic Pong for the AC6502 family, built as a standalone ROM cartridge
 000000r 1               ;   (6502-CRT template). Boots directly, no BASIC. One-player (vs a CPU
@@ -19,12 +19,12 @@ Current file: Pong.asm
 000000r 1               
 000000r 1               .include "6502.inc"
 000000r 2               ; =============================================================================
-000000r 2               ;   6502.inc — External include file for the 6502 system
+000000r 2               ;   6502.inc - External include file for the 6502 system
 000000r 2               ; =============================================================================
 000000r 2               ;
 000000r 2               ;   CPU:       WDC 65C02S
 000000r 2               ;   BIOS:      v1.5
-000000r 2               ;   Assembler: ca65 (cc65 toolchain) — uses := for absolute symbols
+000000r 2               ;   Assembler: ca65 (cc65 toolchain) - uses := for absolute symbols
 000000r 2               ;
 000000r 2               ;   Include this file in external projects to access Kernal routines,
 000000r 2               ;   IO hardware registers, system variables, and useful constants.
@@ -44,13 +44,13 @@ Current file: Pong.asm
 000000r 2               ;                 because Wozmon builds its input buffer there)
 000000r 2               ;   $0500-$05FF   BAS_TOKBUF: BASIC's tokenizing scratch
 000000r 2               ;   $0600-$07FF   FS sector buffer (clobbered by any FS/St routine call)
-000000r 2               ;   $0800-$7FFF   Program RAM (30 KB — load address for user code)
+000000r 2               ;   $0800-$7FFF   Program RAM (30 KB - load address for user code)
 000000r 2               ;   $8000-$83FF   IO 1: Banked RAM Low  (256 × ~1 KB banks)
 000000r 2               ;   $8400-$87FF   IO 2: Banked RAM High (256 × ~1 KB banks)
 000000r 2               ;   $8800-$881F   IO 3: RTC (DS1511Y)
 000000r 2               ;   $8C00-$8C07   IO 4: Storage (CompactFlash, 8-bit IDE)
 000000r 2               ;   $9000-$9003   IO 5: Serial (R65C51 ACIA)
-000000r 2               ;   $9400-$940F   IO 6: GPIO (65C22 VIA — keyboard & joysticks)
+000000r 2               ;   $9400-$940F   IO 6: GPIO (65C22 VIA - keyboard & joysticks)
 000000r 2               ;   $9800-$981C   IO 7: Sound (SID / ARMSID)
 000000r 2               ;   $9C00-$9C01   IO 8: Video (TMS9918 / pico9918)
 000000r 2               ;   $A000-$A0FF   Kernal Jump Table (stable entry points)
@@ -65,14 +65,14 @@ Current file: Pong.asm
 000000r 2               ;   -------------
 000000r 2               ;   On RESET the BIOS probes all eight IO slots, initializes detected
 000000r 2               ;   hardware, and auto-selects video or serial console.  If neither is
-000000r 2               ;   found, IO_MODE is left unchanged (no halt — cartridges with their
+000000r 2               ;   found, IO_MODE is left unchanged (no halt - cartridges with their
 000000r 2               ;   own display hardware can still boot).  A startup beep plays (if SID
 000000r 2               ;   is present) for audible feedback, then BOOT_VECTOR ($035B) is
-000000r 2               ;   checked — if non-zero, execution jumps there (cartridge takeover).
+000000r 2               ;   checked - if non-zero, execution jumps there (cartridge takeover).
 000000r 2               ;   Otherwise a console check halts if no video/serial is found, then
 000000r 2               ;   the splash screen and boot menu are displayed.  ENTER launches
 000000r 2               ;   BASIC; ESC enters the Monitor.  A 5-second timeout auto-boots BASIC.
-000000r 2               ;   The splash is drawn on whichever console is active — centred on the
+000000r 2               ;   The splash is drawn on whichever console is active - centred on the
 000000r 2               ;   40-column screen, or left-aligned as plain text over serial.
 000000r 2               ;
 000000r 2               ;   GRACEFUL DEGRADATION
@@ -88,7 +88,7 @@ Current file: Pong.asm
 000000r 2               ;   Cartridges overlay $C000-$FFFF (BASIC, Monitor, Wozmon, vectors).
 000000r 2               ;   The Kernal ($A000-$B7FF) and character set ($B800-$BFFF) remain
 000000r 2               ;   accessible.  Use KernalInit ($A078) to initialize all hardware and
-000000r 2               ;   return via RTS — interrupts are left disabled so the cart can set
+000000r 2               ;   return via RTS - interrupts are left disabled so the cart can set
 000000r 2               ;   up its own handlers first.  See usage patterns in the BIOS README.
 000000r 2               ;
 000000r 2               ;   IO_MODE
@@ -124,10 +124,10 @@ Current file: Pong.asm
 000000r 2               ; use STR_PTR and CF_BUF_PTR/CF_LBA as parameters to Kernal calls.
 000000r 2               ; Locations $3A-$FF are free for user programs.
 000000r 2               
-000000r 2               STR_PTR             := $02               ; 2 bytes — String pointer (used by FsLoadFile, FsSaveFile, FsDeleteFile, etc.)
-000000r 2               CF_BUF_PTR          := $24               ; 2 bytes — CF sector data buffer pointer
-000000r 2               CF_LBA              := $26               ; 4 bytes — CF 28-bit LBA address (little-endian)
-000000r 2               XFER_PTR            := $2A               ; 2 bytes — XModem transfer data pointer (source for XModemSave, dest for XModemLoad)
+000000r 2               STR_PTR             := $02               ; 2 bytes - String pointer (used by FsLoadFile, FsSaveFile, FsDeleteFile, etc.)
+000000r 2               CF_BUF_PTR          := $24               ; 2 bytes - CF sector data buffer pointer
+000000r 2               CF_LBA              := $26               ; 4 bytes - CF 28-bit LBA address (little-endian)
+000000r 2               XFER_PTR            := $2A               ; 2 bytes - XModem transfer data pointer (source for XModemSave, dest for XModemLoad)
 000000r 2               
 000000r 2               ; Safe zero page range for user programs:
 000000r 2               ; $3A-$FF (198 bytes free)
@@ -139,16 +139,16 @@ Current file: Pong.asm
 000000r 2               ;   SECTION 2: SYSTEM VARIABLES ($0300-$03FF)
 000000r 2               ; =============================================================================
 000000r 2               
-000000r 2               IRQ_PTR             := $0300             ; 2 bytes — IRQ handler vector (writable; default: internal Irq handler)
-000000r 2               BRK_PTR             := $0302             ; 2 bytes — BRK handler vector (writable; default: enters Monitor)
-000000r 2               NMI_PTR             := $0304             ; 2 bytes — NMI handler vector (writable; default: RTI)
+000000r 2               IRQ_PTR             := $0300             ; 2 bytes - IRQ handler vector (writable; default: internal Irq handler)
+000000r 2               BRK_PTR             := $0302             ; 2 bytes - BRK handler vector (writable; default: enters Monitor)
+000000r 2               NMI_PTR             := $0304             ; 2 bytes - NMI handler vector (writable; default: RTI)
 000000r 2               
-000000r 2               IO_MODE             := $0306             ; 1 byte  — Console output mode (bit 0: 0=video, 1=serial)
-000000r 2               VID_CURSOR_X        := $0307             ; 1 byte  — Video cursor column (0-39)
-000000r 2               VID_CURSOR_Y        := $0308             ; 1 byte  — Video cursor row (0-23)
+000000r 2               IO_MODE             := $0306             ; 1 byte  - Console output mode (bit 0: 0=video, 1=serial)
+000000r 2               VID_CURSOR_X        := $0307             ; 1 byte  - Video cursor column (0-39)
+000000r 2               VID_CURSOR_Y        := $0308             ; 1 byte  - Video cursor row (0-23)
 000000r 2               
-000000r 2               HW_PRESENT          := $030D             ; 1 byte  — Hardware present bitmask (set during boot probe)
-000000r 2               CF_DISK             := $030F             ; 1 byte  — Current CF disk bank (0–255); base LBA = CF_DISK × FS_DISK_SECTORS; reset to 0 on boot
+000000r 2               HW_PRESENT          := $030D             ; 1 byte  - Hardware present bitmask (set during boot probe)
+000000r 2               CF_DISK             := $030F             ; 1 byte  - Current CF disk bank (0-255); base LBA = CF_DISK × FS_DISK_SECTORS; reset to 0 on boot
 000000r 2               
 000000r 2               ; HW_PRESENT bit definitions (bit order matches IO slot numbers):
 000000r 2               HW_RAM_L            = %00000001          ; Bit 0: RAM card low  (IO 1, $8000-$83FF)
@@ -156,7 +156,7 @@ Current file: Pong.asm
 000000r 2               HW_RTC              = %00000100          ; Bit 2: RTC card      (IO 3, DS1511Y)
 000000r 2               HW_CF               = %00001000          ; Bit 3: Storage card   (IO 4, CompactFlash)
 000000r 2               HW_SC               = %00010000          ; Bit 4: Serial card    (IO 5, R65C51)
-000000r 2               HW_GPIO             = %00100000          ; Bit 5: GPIO card      (IO 6, 65C22 VIA — keyboard/joysticks)
+000000r 2               HW_GPIO             = %00100000          ; Bit 5: GPIO card      (IO 6, 65C22 VIA - keyboard/joysticks)
 000000r 2               HW_SID              = %01000000          ; Bit 6: Sound card     (IO 7, SID/ARMSID)
 000000r 2               HW_VID              = %10000000          ; Bit 7: Video card     (IO 8, TMS9918/pico9918)
 000000r 2               
@@ -169,21 +169,21 @@ Current file: Pong.asm
 000000r 2               BRK_Y               := $0315             ; Saved Y register
 000000r 2               BRK_SP              := $0316             ; Saved stack pointer
 000000r 2               
-000000r 2               XFER_REMAIN         := $0317             ; 2 bytes — XModem byte count (output from XModemLoad; input to XModemSave)
-000000r 2               XFER_IO_SAVE        := $0319             ; 1 byte  — Saved IO_MODE during XModem transfer (internal use)
+000000r 2               XFER_REMAIN         := $0317             ; 2 bytes - XModem byte count (output from XModemLoad; input to XModemSave)
+000000r 2               XFER_IO_SAVE        := $0319             ; 1 byte  - Saved IO_MODE during XModem transfer (internal use)
 000000r 2               
 000000r 2               ; RTC scratch (used by RtcWriteDate to pass century):
 000000r 2               RTC_BUF_CENT        := $030B             ; Century value for RtcReadDate / RtcWriteDate
 000000r 2               
 000000r 2               ; Cartridge / boot redirect vector:
-000000r 2               BOOT_VECTOR         := $035B             ; 2 bytes — Boot redirect address (0=normal boot)
+000000r 2               BOOT_VECTOR         := $035B             ; 2 bytes - Boot redirect address (0=normal boot)
 000000r 2                                                        ;   Set after KernalInit to redirect Reset flow
 000000r 2                                                        ;   KernalInit zeroes this; write after init returns
-000000r 2               FS_IO_ADDR          := $037F             ; 2 bytes — Load/save target address for FsLoadFileAddr / FsSaveFileAddr
-000000r 2               FS_FILE_SIZE        := $034A             ; 2 bytes — File size in bytes (set by caller for FsSaveFileAddr; populated by FsLoadFileAddr)
+000000r 2               FS_IO_ADDR          := $037F             ; 2 bytes - Load/save target address for FsLoadFileAddr / FsSaveFileAddr
+000000r 2               FS_FILE_SIZE        := $034A             ; 2 bytes - File size in bytes (set by caller for FsSaveFileAddr; populated by FsLoadFileAddr)
 000000r 2               
 000000r 2               ; Program image handoff (v1.3):
-000000r 2               PRG_IMAGE_END       := $038E             ; 2 bytes — End address of a program image placed at
+000000r 2               PRG_IMAGE_END       := $038E             ; 2 bytes - End address of a program image placed at
 000000r 2                                                        ;   PROGRAM_START by a loader running outside BASIC
 000000r 2                                                        ;   (e.g. the Monitor's L command); 0 = none.
 000000r 2                                                        ;   KernalInit zeroes it; BASIC consumes and re-zeroes it
@@ -197,7 +197,7 @@ Current file: Pong.asm
 000000r 2               ;   SECTION 3: KEY MEMORY LOCATIONS
 000000r 2               ; =============================================================================
 000000r 2               
-000000r 2               INPUT_BUFFER        := $0200             ; $0200-$02FF — 256-byte ring buffer (keyboard/serial input)
+000000r 2               INPUT_BUFFER        := $0200             ; $0200-$02FF - 256-byte ring buffer (keyboard/serial input)
 000000r 2               PROGRAM_START       := $0800             ; User programs and BASIC programs load here
 000000r 2               ;                                        ; Program space extends to $7FFF (30 KB)
 000000r 2               MEMORY_TOP          := $8000             ; First address past usable RAM (IO space starts here)
@@ -294,7 +294,7 @@ Current file: Pong.asm
 000000r 2                                                        ;   Modifies: A
 000000r 2               
 000000r 2               SidSilence          := $A036             ; Silence all 3 SID voices (gate off only)
-000000r 2                                                        ;   Frequencies are left intact — the envelope release
+000000r 2                                                        ;   Frequencies are left intact - the envelope release
 000000r 2                                                        ;   rings the tone out.  Zeroing freq would freeze the
 000000r 2                                                        ;   waveform and decay a DC offset (audible thump)
 000000r 2                                                        ;   Skips silently if no SID is fitted
@@ -314,7 +314,7 @@ Current file: Pong.asm
 000000r 2               ;   StReadSector / StWriteSector operate on the selected bank automatically.
 000000r 2               ;   Pass null-terminated "NAME.EXT" string via STR_PTR ($02-$03).
 000000r 2               ;   Use FsLoadFileAddr / FsSaveFileAddr for load-to-address transfers.
-000000r 2               ;   The extension is inert — nothing in the BIOS branches on it, so .PRG, .BAS
+000000r 2               ;   The extension is inert - nothing in the BIOS branches on it, so .PRG, .BAS
 000000r 2               ;   and .FOO behave identically.  What a file means is decided by the routine
 000000r 2               ;   that loads it, never by its name.
 000000r 2               ;   All FS routines use $0600-$07FF as a 512-byte sector buffer.
@@ -340,8 +340,8 @@ Current file: Pong.asm
 000000r 2                                                        ;   Modifies: A
 000000r 2               
 000000r 2               ; --- Joysticks ---
-000000r 2               ;   Both ports are ACTIVE LOW — each line is pulled up through 1K and grounded
-000000r 2               ;   by its switch — and both routines return the port read raw.  So a held
+000000r 2               ;   Both ports are ACTIVE LOW - each line is pulled up through 1K and grounded
+000000r 2               ;   by its switch - and both routines return the port read raw.  So a held
 000000r 2               ;   button is a 0 bit and an untouched stick reads $FF:
 000000r 2               ;
 000000r 2               ;     Bit:  7   6   5   4   3   2   1   0
@@ -349,7 +349,7 @@ Current file: Pong.asm
 000000r 2               ;
 000000r 2               ;   Test a direction with:  lda ... / and #%00010000 / beq @UpHeld
 000000r 2               ;
-000000r 2               ;   Neither routine checks HW_PRESENT — with no GPIO card fitted they read a
+000000r 2               ;   Neither routine checks HW_PRESENT - with no GPIO card fitted they read a
 000000r 2               ;   floating bus and the value is meaningless.  Test HW_GPIO first if the card
 000000r 2               ;   may be absent.  (BASIC's JOY() does this and reports $FF.)
 000000r 2               ;
@@ -452,7 +452,7 @@ Current file: Pong.asm
 000000r 2                                                        ;   Out: A = major version, X = minor version
 000000r 2               
 000000r 2               ; --- Disk-banking & addressed storage (v1.1) ---
-000000r 2               ;   CF_DISK ($030F) selects the current disk bank (0–255).
+000000r 2               ;   CF_DISK ($030F) selects the current disk bank (0-255).
 000000r 2               ;   All FS routines, StReadSector, and StWriteSector address the selected
 000000r 2               ;   bank automatically.  Bank changes survive until the next reset.
 000000r 2               
@@ -471,15 +471,15 @@ Current file: Pong.asm
 000000r 2               
 000000r 2               FsFormatDisk        := $A084             ; Zero the current disk's directory (erases all 16 entries)
 000000r 2                                                        ;   Out: C=0 success, C=1 write error
-000000r 2                                                        ;   No confirmation prompt — caller is responsible
+000000r 2                                                        ;   No confirmation prompt - caller is responsible
 000000r 2                                                        ;   Modifies: A, X, Y
 000000r 2               
 000000r 2               FsSetDisk           := $A087             ; Select the current CF disk bank
-000000r 2                                                        ;   In: A = disk number (0–255) → stored in CF_DISK ($030F)
+000000r 2                                                        ;   In: A = disk number (0-255) → stored in CF_DISK ($030F)
 000000r 2                                                        ;   Modifies: Flags
 000000r 2               
 000000r 2               FsGetDisk           := $A08A             ; Get the current CF disk bank
-000000r 2                                                        ;   Out: A = CF_DISK value (0–255)
+000000r 2                                                        ;   Out: A = CF_DISK value (0-255)
 000000r 2                                                        ;   Modifies: Flags, A
 000000r 2               
 000000r 2               FsPrintDisk         := $A08D             ; Print "DISK n" + CRLF via Chrout (decimal, no leading zeros)
@@ -541,8 +541,8 @@ Current file: Pong.asm
 000000r 2               RTC_RAM_ADDR        := $8810             ; NVRAM address register
 000000r 2               RTC_RAM_DATA        := $8813             ; NVRAM data register
 000000r 2               ; Control Register B bits:
-000000r 2               RTC_CTRL_B_TE       := %10000000         ; Transfer Enable — set to inhibit clock updates during write
-000000r 2               ; Month register ($8805) — the upper 3 bits are oscillator/SQW control, not month data.
+000000r 2               RTC_CTRL_B_TE       := %10000000         ; Transfer Enable - set to inhibit clock updates during write
+000000r 2               ; Month register ($8805) - the upper 3 bits are oscillator/SQW control, not month data.
 000000r 2               ; Always mask with RTC_MON_MASK when reading the month, and preserve these bits on write.
 000000r 2               RTC_MON_MASK        := %00011111         ; Month value occupies the low 5 bits
 000000r 2               RTC_MON_EOSC        := %10000000         ; Oscillator Start/Stop (0 = oscillator running)
@@ -552,26 +552,26 @@ Current file: Pong.asm
 000000r 2               ; --- CompactFlash / Storage (IO 4: $8C00-$8C07) ---
 000000r 2               ;   8-bit IDE (True IDE) mode.  The BIOS issues Set Features $01 at boot
 000000r 2               ;   to enable 8-bit data transfers.
-000000r 2               ST_DATA             := $8C00             ; R/W — Data register
-000000r 2               ST_ERROR            := $8C01             ; Read — Error register
-000000r 2               ST_FEATURE          := $8C01             ; Write — Feature register
-000000r 2               ST_SECT_CNT         := $8C02             ; R/W — Sector count
-000000r 2               ST_LBA_0            := $8C03             ; R/W — LBA bits 0-7
-000000r 2               ST_LBA_1            := $8C04             ; R/W — LBA bits 8-15
-000000r 2               ST_LBA_2            := $8C05             ; R/W — LBA bits 16-23
-000000r 2               ST_LBA_3            := $8C06             ; R/W — LBA bits 24-27 + drive/mode
-000000r 2               ST_STATUS           := $8C07             ; Read — Status register
-000000r 2               ST_CMD              := $8C07             ; Write — Command register
+000000r 2               ST_DATA             := $8C00             ; R/W - Data register
+000000r 2               ST_ERROR            := $8C01             ; Read - Error register
+000000r 2               ST_FEATURE          := $8C01             ; Write - Feature register
+000000r 2               ST_SECT_CNT         := $8C02             ; R/W - Sector count
+000000r 2               ST_LBA_0            := $8C03             ; R/W - LBA bits 0-7
+000000r 2               ST_LBA_1            := $8C04             ; R/W - LBA bits 8-15
+000000r 2               ST_LBA_2            := $8C05             ; R/W - LBA bits 16-23
+000000r 2               ST_LBA_3            := $8C06             ; R/W - LBA bits 24-27 + drive/mode
+000000r 2               ST_STATUS           := $8C07             ; Read - Status register
+000000r 2               ST_CMD              := $8C07             ; Write - Command register
 000000r 2               
 000000r 2               ; CF Status Register bits:
 000000r 2               ST_STATUS_ERR       := %00000001         ; Error occurred
 000000r 2               ST_STATUS_IDX       := %00000010         ; Index mark
 000000r 2               ST_STATUS_CORR      := %00000100         ; Corrected data
-000000r 2               ST_STATUS_DRQ       := %00001000         ; Data request — ready for data transfer
+000000r 2               ST_STATUS_DRQ       := %00001000         ; Data request - ready for data transfer
 000000r 2               ST_STATUS_DSC       := %00010000         ; Drive seek complete
 000000r 2               ST_STATUS_DWF       := %00100000         ; Drive write fault
 000000r 2               ST_STATUS_RDY       := %01000000         ; Drive ready
-000000r 2               ST_STATUS_BSY       := %10000000         ; Drive busy — all other bits invalid while set
+000000r 2               ST_STATUS_BSY       := %10000000         ; Drive busy - all other bits invalid while set
 000000r 2               
 000000r 2               ; CF Error Register bits:
 000000r 2               ST_ERR_AMNF         := %00000001         ; Address mark not found
@@ -611,11 +611,11 @@ Current file: Pong.asm
 000000r 2               
 000000r 2               ; --- Serial Card (R65C51 ACIA) (IO 5: $9000-$9003) ---
 000000r 2               ;   Default config after InitSC: 8-N-1, 19200 baud, RX IRQ enabled
-000000r 2               SC_DATA             := $9000             ; R/W — Data register
-000000r 2               SC_RESET            := $9001             ; Write — Programmatic reset (write any value)
-000000r 2               SC_STATUS           := $9001             ; Read — Status register
-000000r 2               SC_CMD              := $9002             ; R/W — Command register
-000000r 2               SC_CTRL             := $9003             ; R/W — Control register
+000000r 2               SC_DATA             := $9000             ; R/W - Data register
+000000r 2               SC_RESET            := $9001             ; Write - Programmatic reset (write any value)
+000000r 2               SC_STATUS           := $9001             ; Read - Status register
+000000r 2               SC_CMD              := $9002             ; R/W - Command register
+000000r 2               SC_CTRL             := $9003             ; R/W - Control register
 000000r 2               
 000000r 2               ; Serial Status Register bits:
 000000r 2               SC_STATUS_IRQ       := %10000000         ; Interrupt occurred
@@ -763,7 +763,7 @@ Current file: Pong.asm
 000000r 2               SID_NOTE_Bb3        = SID_NOTE_AS3
 000000r 2               SID_NOTE_B3         = $102F              ; ~247 Hz
 000000r 2               
-000000r 2               ; Octave 4 (C4=261.63 Hz .. B4=493.88 Hz) — middle octave
+000000r 2               ; Octave 4 (C4=261.63 Hz .. B4=493.88 Hz) - middle octave
 000000r 2               SID_NOTE_C4         = $1125              ; ~262 Hz (Middle C)
 000000r 2               SID_NOTE_CS4        = $122A              ; ~277 Hz
 000000r 2               SID_NOTE_Db4        = SID_NOTE_CS4
@@ -837,7 +837,7 @@ Current file: Pong.asm
 000000r 2               SID_NOTE_A7         = $E6B0              ; ~3520 Hz
 000000r 2               SID_NOTE_AS7        = $F467              ; ~3729 Hz
 000000r 2               SID_NOTE_Bb7        = SID_NOTE_AS7
-000000r 2               ; Note: B7 (~3951 Hz = $102F0) exceeds the 16-bit SID register — not defined
+000000r 2               ; Note: B7 (~3951 Hz = $102F0) exceeds the 16-bit SID register - not defined
 000000r 2               
 000000r 2               ; --- Video Card (TMS9918 / pico9918) (IO 8: $9C00-$9C01) ---
 000000r 2               ;   Text mode: 40 columns × 24 rows.  Name table at VRAM $0000 (960 bytes).
@@ -845,9 +845,9 @@ Current file: Pong.asm
 000000r 2               ;   To write to a VRAM address: write low byte to VC_REG, then (high | $40) to VC_REG.
 000000r 2               ;   To read from a VRAM address: write low byte to VC_REG, then high byte to VC_REG.
 000000r 2               ;   Register writes: write data byte to VC_REG, then (reg# | $80) to VC_REG.
-000000r 2               VC_DATA             := $9C00             ; R/W — VRAM data (auto-increments address)
-000000r 2               VC_REG              := $9C01             ; Write — Address/register port
-000000r 2               VC_STATUS           := $9C01             ; Read — Status register
+000000r 2               VC_DATA             := $9C00             ; R/W - VRAM data (auto-increments address)
+000000r 2               VC_REG              := $9C01             ; Write - Address/register port
+000000r 2               VC_STATUS           := $9C01             ; Read - Status register
 000000r 2               
 000000r 2               ; =============================================================================
 000000r 2               ;   SECTION 6: USEFUL CONSTANTS
@@ -899,7 +899,7 @@ Current file: Pong.asm
 000000r 2               
 000000r 1               .include "src/zeropage.inc"
 000000r 2               ; =============================================================================
-000000r 2               ;   zeropage.inc — Pong zero-page variables and game constants
+000000r 2               ;   zeropage.inc - Pong zero-page variables and game constants
 000000r 2               ; =============================================================================
 000000r 2               ;   Zero page $3A-$FF is free for a program that has taken the machine over
 000000r 2               ;   (see SECTION 1 of 6502.inc). 6502.cfg defines no RAM/BSS segment, so
@@ -1005,7 +1005,7 @@ Current file: Pong.asm
 000000r 1               
 000000r 1               .include "src/tiles.asm"
 000000r 2               ; =============================================================================
-000000r 2               ;   tiles.asm — Graphics I tile codes, colors, and custom 8x8 tile patterns
+000000r 2               ;   tiles.asm - Graphics I tile codes, colors, and custom 8x8 tile patterns
 000000r 2               ; =============================================================================
 000000r 2               ;   Same approach as the Snake cartridge: each custom tile code lives in its
 000000r 2               ;   own color group (group = code>>3) so it gets an independent fg/bg pair
@@ -1077,7 +1077,7 @@ Current file: Pong.asm
 000020r 2               
 000020r 1               .include "src/vdp.asm"
 000020r 2               ; =============================================================================
-000020r 2               ;   vdp.asm — TMS9918 Graphics I mode setup and drawing primitives
+000020r 2               ;   vdp.asm - TMS9918 Graphics I mode setup and drawing primitives
 000020r 2               ; =============================================================================
 000020r 2               ;   Port protocol (from 6502.inc, verified against the live BIOS source):
 000020r 2               ;     Set VRAM write address: addr_lo -> VC_REG, then (addr_hi | $40) -> VC_REG
@@ -1087,17 +1087,17 @@ Current file: Pong.asm
 000020r 2               ;   two-byte write-latch that address-set and register-set writes depend on.
 000020r 2               ;   An interrupt landing between the two bytes of a VC_REG write (or between
 000020r 2               ;   an address-set and the data write that follows it) desyncs every VDP
-000020r 2               ;   write after that point, scrambling the screen — invisible in headless
+000020r 2               ;   write after that point, scrambling the screen - invisible in headless
 000020r 2               ;   turbo-speed testing but routine at real frame rates. Every VDP write
 000020r 2               ;   sequence in this file is wrapped in PHP / SEI ... PLP (not raw SEI/CLI,
-000020r 2               ;   which doesn't compose when one protected routine calls another — nesting
+000020r 2               ;   which doesn't compose when one protected routine calls another - nesting
 000020r 2               ;   PHP/SEI/PLP is safe, nesting raw SEI/CLI is not).
 000020r 2               ; =============================================================================
 000020r 2               
 000020r 2               .segment "CART"
 000020r 2               
 000020r 2               ; -----------------------------------------------------------------------------
-000020r 2               ; VdpWriteReg — write one VDP mode register
+000020r 2               ; VdpWriteReg - write one VDP mode register
 000020r 2               ; In: A = value, X = register number (0-7)
 000020r 2               ; -----------------------------------------------------------------------------
 000020r 2               VdpWriteReg:
@@ -1111,7 +1111,7 @@ Current file: Pong.asm
 00002Cr 2  60             rts
 00002Dr 2               
 00002Dr 2               ; -----------------------------------------------------------------------------
-00002Dr 2               ; VdpSetAddr — set the VRAM read/write pointer
+00002Dr 2               ; VdpSetAddr - set the VRAM read/write pointer
 00002Dr 2               ; In: A = address low byte, X = address high byte
 00002Dr 2               ; -----------------------------------------------------------------------------
 00002Dr 2               VdpSetAddr:
@@ -1125,7 +1125,7 @@ Current file: Pong.asm
 000039r 2  60             rts
 00003Ar 2               
 00003Ar 2               ; -----------------------------------------------------------------------------
-00003Ar 2               ; ComputeOffset — compute row*32+col into OFFSET_LO/OFFSET_HI
+00003Ar 2               ; ComputeOffset - compute row*32+col into OFFSET_LO/OFFSET_HI
 00003Ar 2               ; In: A = row (0-23), X = col (0-31)
 00003Ar 2               ; Clobbers: A, Y
 00003Ar 2               ; -----------------------------------------------------------------------------
@@ -1148,21 +1148,21 @@ Current file: Pong.asm
 000051r 2  60             rts
 000052r 2               
 000052r 2               ; -----------------------------------------------------------------------------
-000052r 2               ; VdpSetOffsetAddr — point the VRAM write pointer at name-table offset
+000052r 2               ; VdpSetOffsetAddr - point the VRAM write pointer at name-table offset
 000052r 2               ; OFFSET_LO/OFFSET_HI (name table base is $0000, so address == offset)
 000052r 2               ; -----------------------------------------------------------------------------
 000052r 2               VdpSetOffsetAddr:
 000052r 2  A5 4B          lda OFFSET_LO
 000054r 2  A6 4C          ldx OFFSET_HI
-000056r 2  4C rr rr       jmp VdpSetAddr        ; tail call — VdpSetAddr's rts returns to our caller
+000056r 2  4C rr rr       jmp VdpSetAddr        ; tail call - VdpSetAddr's rts returns to our caller
 000059r 2               
 000059r 2               ; -----------------------------------------------------------------------------
-000059r 2               ; DrawTile — draw a tile code into the name table at (row,col)
+000059r 2               ; DrawTile - draw a tile code into the name table at (row,col)
 000059r 2               ; In: A = row, X = col, Y = tile code
 000059r 2               ;
 000059r 2               ; Also atomic end-to-end (not just the address-set half): an interrupt
 000059r 2               ; landing between the address-set and the data write is only harmless if
-000059r 2               ; nothing else touches the VDP in between, which we can't assume — same
+000059r 2               ; nothing else touches the VDP in between, which we can't assume - same
 000059r 2               ; reasoning as VdpWriteReg above.
 000059r 2               ; -----------------------------------------------------------------------------
 000059r 2               DrawTile:
@@ -1178,7 +1178,7 @@ Current file: Pong.asm
 000068r 2  60             rts
 000069r 2               
 000069r 2               ; -----------------------------------------------------------------------------
-000069r 2               ; EraseTile — draw TILE_BLANK at (row,col)
+000069r 2               ; EraseTile - draw TILE_BLANK at (row,col)
 000069r 2               ; In: A = row, X = col
 000069r 2               ; -----------------------------------------------------------------------------
 000069r 2               EraseTile:
@@ -1186,7 +1186,7 @@ Current file: Pong.asm
 00006Br 2  4C rr rr       jmp DrawTile
 00006Er 2               
 00006Er 2               ; -----------------------------------------------------------------------------
-00006Er 2               ; ClearScreen — fill all 768 name-table cells (32x24) with TILE_BLANK
+00006Er 2               ; ClearScreen - fill all 768 name-table cells (32x24) with TILE_BLANK
 00006Er 2               ; -----------------------------------------------------------------------------
 00006Er 2               ClearScreen:
 00006Er 2  08             php
@@ -1207,7 +1207,7 @@ Current file: Pong.asm
 000087r 2  60             rts
 000088r 2               
 000088r 2               ; -----------------------------------------------------------------------------
-000088r 2               ; WriteTilePatterns — copy the four custom 8x8 patterns into VRAM
+000088r 2               ; WriteTilePatterns - copy the four custom 8x8 patterns into VRAM
 000088r 2               ; -----------------------------------------------------------------------------
 000088r 2               WriteTilePatterns:
 000088r 2  08             php
@@ -1259,7 +1259,7 @@ Current file: Pong.asm
 0000DBr 2  60             rts
 0000DCr 2               
 0000DCr 2               ; -----------------------------------------------------------------------------
-0000DCr 2               ; DrawWalls — draw the top and bottom walls across all 32 columns. Unlike a
+0000DCr 2               ; DrawWalls - draw the top and bottom walls across all 32 columns. Unlike a
 0000DCr 2               ; bordered game there are NO side walls: columns 0 and 31 on the playable
 0000DCr 2               ; rows stay blank, since that's where the ball exits to score.
 0000DCr 2               ; -----------------------------------------------------------------------------
@@ -1283,7 +1283,7 @@ Current file: Pong.asm
 0000F8r 2  60             rts
 0000F9r 2               
 0000F9r 2               ; -----------------------------------------------------------------------------
-0000F9r 2               ; DrawBoxFrame — draw a TILE_FRAME outline around the win-overlay box
+0000F9r 2               ; DrawBoxFrame - draw a TILE_FRAME outline around the win-overlay box
 0000F9r 2               ; -----------------------------------------------------------------------------
 0000F9r 2               DrawBoxFrame:
 0000F9r 2  64 4D          stz SCAN_TMP
@@ -1332,7 +1332,7 @@ Current file: Pong.asm
 00013Fr 2  60             rts
 000140r 2               
 000140r 2               ; -----------------------------------------------------------------------------
-000140r 2               ; ClearBoxInterior — blank the win-overlay box's interior (excludes its
+000140r 2               ; ClearBoxInterior - blank the win-overlay box's interior (excludes its
 000140r 2               ; 1-tile frame border)
 000140r 2               ; -----------------------------------------------------------------------------
 000140r 2               ClearBoxInterior:
@@ -1363,7 +1363,7 @@ Current file: Pong.asm
 000168r 2  60             rts
 000169r 2               
 000169r 2               ; -----------------------------------------------------------------------------
-000169r 2               ; InitGraphicsI — switch the VDP into Graphics I mode and build the screen
+000169r 2               ; InitGraphicsI - switch the VDP into Graphics I mode and build the screen
 000169r 2               ; -----------------------------------------------------------------------------
 000169r 2               InitGraphicsI:
 000169r 2  AD 0D 03       lda HW_PRESENT
@@ -1374,10 +1374,10 @@ Current file: Pong.asm
 000172r 2  A0 rr          ldy #>NoVideoMsg
 000174r 2  20 90 A0       jsr PrintStr
 000177r 2               @haltLoop:
-000177r 2  80 FE          bra @haltLoop            ; plain 65C02 has no WAI — spin forever instead
+000177r 2  80 FE          bra @haltLoop            ; plain 65C02 has no WAI - spin forever instead
 000179r 2               
 000179r 2               @haveVideo:
-000179r 2  08             php                      ; outer critical section for the whole setup —
+000179r 2  08             php                      ; outer critical section for the whole setup -
 00017Ar 2  78             sei                      ; covers the inline register/color-table writes
 00017Br 2                                           ; below that aren't wrapped by a called routine
 00017Br 2  A9 80          lda #$80
@@ -1449,7 +1449,7 @@ Current file: Pong.asm
 000200r 2               
 000200r 2  20 rr rr       jsr WriteTilePatterns
 000203r 2  20 rr rr       jsr ClearScreen
-000206r 2  20 rr rr       jsr DrawWalls            ; top+bottom only — no side walls, ball exits there
+000206r 2  20 rr rr       jsr DrawWalls            ; top+bottom only - no side walls, ball exits there
 000209r 2               
 000209r 2  A9 C0          lda #$C0
 00020Br 2  A2 01          ldx #1
@@ -1464,10 +1464,10 @@ Current file: Pong.asm
 00022Dr 2               
 00022Dr 1               .include "src/rng.asm"
 00022Dr 2               ; =============================================================================
-00022Dr 2               ;   rng.asm — 8-bit Galois LFSR pseudo-random generator
+00022Dr 2               ;   rng.asm - 8-bit Galois LFSR pseudo-random generator
 00022Dr 2               ; =============================================================================
 00022Dr 2               ;   Same proven LFSR as the sibling Snake cartridge. RNG_STATE must never be
-00022Dr 2               ;   seeded to 0 — a Galois LFSR at all-zero is a fixed point it can never
+00022Dr 2               ;   seeded to 0 - a Galois LFSR at all-zero is a fixed point it can never
 00022Dr 2               ;   leave (every subsequent shift/eor still lands on 0). Guaranteeing a
 00022Dr 2               ;   non-zero seed is the CALLER's responsibility (done once in screens.asm's
 00022Dr 2               ;   WaitForModeSelect), not this file's.
@@ -1476,7 +1476,7 @@ Current file: Pong.asm
 00022Dr 2               .segment "CART"
 00022Dr 2               
 00022Dr 2               ; -----------------------------------------------------------------------------
-00022Dr 2               ; AdvanceRng — step the LFSR one bit (maximal-length, period 255)
+00022Dr 2               ; AdvanceRng - step the LFSR one bit (maximal-length, period 255)
 00022Dr 2               ; -----------------------------------------------------------------------------
 00022Dr 2               AdvanceRng:
 00022Dr 2  A5 44          lda RNG_STATE
@@ -1488,10 +1488,10 @@ Current file: Pong.asm
 000236r 2  60             rts
 000237r 2               
 000237r 2               ; -----------------------------------------------------------------------------
-000237r 2               ; RollDirection — hand back one fresh pseudo-random byte
+000237r 2               ; RollDirection - hand back one fresh pseudo-random byte
 000237r 2               ; Out: A = fresh pseudo-random byte
 000237r 2               ;   Callers extract dx sign from bit 0 and reduce other bits into a small
-000237r 2               ;   range themselves for dy — this routine just supplies the raw byte.
+000237r 2               ;   range themselves for dy - this routine just supplies the raw byte.
 000237r 2               ; -----------------------------------------------------------------------------
 000237r 2               RollDirection:
 000237r 2  20 rr rr       jsr AdvanceRng
@@ -1500,16 +1500,16 @@ Current file: Pong.asm
 00023Dr 2               
 00023Dr 1               .include "src/sound.asm"
 00023Dr 2               ; =============================================================================
-00023Dr 2               ;   sound.asm — non-blocking sound effects
+00023Dr 2               ;   sound.asm - non-blocking sound effects
 00023Dr 2               ; =============================================================================
 00023Dr 2               ;   Beep is guaranteed safe (self-no-ops with no SID card fitted) but blocks
-00023Dr 2               ;   the CPU for its full ~300ms tone duration — fine for a one-off like
+00023Dr 2               ;   the CPU for its full ~300ms tone duration - fine for a one-off like
 00023Dr 2               ;   Sound_Win, but unusable for a per-tick hit/bounce/score sound (it would
 00023Dr 2               ;   freeze the whole game for a beat every time). Sound_PaddleHit,
 00023Dr 2               ;   Sound_WallBounce, and Sound_Score instead drive SidPlayNote/SidSilence
 00023Dr 2               ;   directly: both are plain register writes with no delay loop, so they
 00023Dr 2               ;   return to the caller immediately. The SID's own envelope hardware keeps
-00023Dr 2               ;   ringing the note out in real time after that — gating off right away
+00023Dr 2               ;   ringing the note out in real time after that - gating off right away
 00023Dr 2               ;   just starts the (already short, full-sustain) release phase, it doesn't
 00023Dr 2               ;   cut the sound short. All SID routines self-no-op with no SID fitted, and
 00023Dr 2               ;   none of this touches the VDP, so no php/sei protection is needed here.
@@ -1518,7 +1518,7 @@ Current file: Pong.asm
 00023Dr 2               .segment "CART"
 00023Dr 2               
 00023Dr 2               ; -----------------------------------------------------------------------------
-00023Dr 2               ; Sound_PaddleHit — short mid-high blip when the ball hits a paddle
+00023Dr 2               ; Sound_PaddleHit - short mid-high blip when the ball hits a paddle
 00023Dr 2               ; -----------------------------------------------------------------------------
 00023Dr 2               Sound_PaddleHit:
 00023Dr 2  A9 00          lda #0
@@ -1529,7 +1529,7 @@ Current file: Pong.asm
 000249r 2  60             rts
 00024Ar 2               
 00024Ar 2               ; -----------------------------------------------------------------------------
-00024Ar 2               ; Sound_WallBounce — short lower-pitched blip when the ball hits a wall
+00024Ar 2               ; Sound_WallBounce - short lower-pitched blip when the ball hits a wall
 00024Ar 2               ; -----------------------------------------------------------------------------
 00024Ar 2               Sound_WallBounce:
 00024Ar 2  A9 00          lda #0
@@ -1540,7 +1540,7 @@ Current file: Pong.asm
 000256r 2  60             rts
 000257r 2               
 000257r 2               ; -----------------------------------------------------------------------------
-000257r 2               ; Sound_Score — short distinct blip when a point is scored
+000257r 2               ; Sound_Score - short distinct blip when a point is scored
 000257r 2               ; -----------------------------------------------------------------------------
 000257r 2               Sound_Score:
 000257r 2  A9 00          lda #0
@@ -1551,8 +1551,8 @@ Current file: Pong.asm
 000263r 2  60             rts
 000264r 2               
 000264r 2               ; -----------------------------------------------------------------------------
-000264r 2               ; Sound_Win — one-time end-of-game fanfare (called at most once per game,
-000264r 2               ; when a player reaches WIN_SCORE) — not a hot path, so a short blocking
+000264r 2               ; Sound_Win - one-time end-of-game fanfare (called at most once per game,
+000264r 2               ; when a player reaches WIN_SCORE) - not a hot path, so a short blocking
 000264r 2               ; arpeggio via SidPlayNote + SysDelay is fine here.
 000264r 2               ; -----------------------------------------------------------------------------
 000264r 2               Sound_Win:
@@ -1588,13 +1588,13 @@ Current file: Pong.asm
 00029Er 2               .segment "CART"
 00029Er 2               
 00029Er 2               ; =============================================================================
-00029Er 2               ;   input.asm — joystick-first, keyboard-fallback polling
+00029Er 2               ;   input.asm - joystick-first, keyboard-fallback polling
 00029Er 2               ; =============================================================================
 00029Er 2               ;   Built on 6502-Lib's shared core/input.asm (PollJoyCombined/PollJoy1/
-00029Er 2               ;   PollJoy2/DrainKeyboardCombined/DrainKeyboardSplit — see that file for the
+00029Er 2               ;   PollJoy2/DrainKeyboardCombined/DrainKeyboardSplit - see that file for the
 00029Er 2               ;   primitives themselves). This file only composes them into Pong's own
 00029Er 2               ;   MENU_DIR/NEXT_P1/NEXT_P2/START_PRESSED, per the shared priority rule:
-00029Er 2               ;   joystick first — if the joystick shows ANY direction this poll, use ONLY
+00029Er 2               ;   joystick first - if the joystick shows ANY direction this poll, use ONLY
 00029Er 2               ;   the joystick's direction(s) this poll and don't consult the keyboard at
 00029Er 2               ;   all; only fall back to the keyboard's drained result when the joystick
 00029Er 2               ;   shows NOTHING this poll (including when no GPIO card is fitted at all).
@@ -1604,7 +1604,7 @@ Current file: Pong.asm
 00029Er 2               ;
 00029Er 2               ;   A cartridge owns the whole shell while it's running, so keyboard input
 00029Er 2               ;   here can't collide with a BASIC prompt the way it could in a full-system
-00029Er 2               ;   UI — the concern that originally motivated joystick-only design doesn't
+00029Er 2               ;   UI - the concern that originally motivated joystick-only design doesn't
 00029Er 2               ;   apply to a cartridge. Two players sharing one keyboard use the standard
 00029Er 2               ;   split: WASD is the physical left-hand cluster (P1), arrow keys are the
 00029Er 2               ;   physical right-hand cluster (P2), so their hands don't collide.
@@ -1612,8 +1612,8 @@ Current file: Pong.asm
 00029Er 2               ;   Two separate polling routines, not one, because they mean different
 00029Er 2               ;   things by "combine the joysticks":
 00029Er 2               ;     - PollMenuInput (title/mode-select): joystick 1 and 2 are OR'd
-00029Er 2               ;       together — whoever is holding a controller can navigate, since no
-00029Er 2               ;       player has been assigned to a port yet — and keyboard fallback is
+00029Er 2               ;       together - whoever is holding a controller can navigate, since no
+00029Er 2               ;       player has been assigned to a port yet - and keyboard fallback is
 00029Er 2               ;       DrainKeyboardCombined (WASD or arrows, whichever was pressed most
 00029Er 2               ;       recently, no player distinction, since there's no player split yet
 00029Er 2               ;       either).
@@ -1622,10 +1622,10 @@ Current file: Pong.asm
 00029Er 2               ;       NEXT_P2, and joystick 2 is instead OR'd into P1's input too, so a
 00029Er 2               ;       single-player controller works from either port (same reasoning
 00029Er 2               ;       as the sibling Snake cartridge). Combining both ports for P1 in
-00029Er 2               ;       2P mode would be wrong — it would let either player move the
-00029Er 2               ;       other's paddle — so 2P mode keeps them strictly separate. Keyboard
+00029Er 2               ;       2P mode would be wrong - it would let either player move the
+00029Er 2               ;       other's paddle - so 2P mode keeps them strictly separate. Keyboard
 00029Er 2               ;       fallback is DrainKeyboardSplit: WASD drives P1's fallback ONLY,
-00029Er 2               ;       arrow keys drive P2's fallback ONLY, unconditionally — never
+00029Er 2               ;       arrow keys drive P2's fallback ONLY, unconditionally - never
 00029Er 2               ;       combined/either-or, for the same "don't let one player move the
 00029Er 2               ;       other's paddle" reason. Unlike joystick 2, arrow keys are never
 00029Er 2               ;       OR'd into P1 in 1P mode: WASD is always P1's keyboard fallback,
@@ -1645,24 +1645,24 @@ Current file: Pong.asm
 00029Er 2               ;   for movement until the TTL counts down to 0. This bookkeeping runs
 00029Er 2               ;   every tick regardless of joystick state (so Chrin never backs up and
 00029Er 2               ;   the TTL stays accurate), but is only ever *applied* to NEXT_P1/NEXT_P2
-00029Er 2               ;   on a tick where that player's joystick showed nothing — joystick still
+00029Er 2               ;   on a tick where that player's joystick showed nothing - joystick still
 00029Er 2               ;   wins outright the instant it's touched.
 00029Er 2               ; =============================================================================
 00029Er 2               
 00029Er 2               .include "../../6502-Lib/core/input.asm"
 00029Er 3               ; =============================================================================
-00029Er 3               ;   input.asm — shared joystick-first, keyboard-fallback input primitives
+00029Er 3               ;   input.asm - shared joystick-first, keyboard-fallback input primitives
 00029Er 3               ; =============================================================================
 00029Er 3               ; Caller contract:
 00029Er 3               ; - Consuming project defines HW_PRESENT, HW_GPIO, ReadJoystick1,
 00029Er 3               ;   ReadJoystick2, Chrin (all Kernal-provided) before including this file.
 00029Er 3               ; - Consuming project defines its own DIR_UP/DIR_DOWN constants (and
 00029Er 3               ;   DIR_LEFT/DIR_RIGHT, only if it's a 4-directional game) at whatever
-00029Er 3               ;   numeric values it already uses — this file references them by name
+00029Er 3               ;   numeric values it already uses - this file references them by name
 00029Er 3               ;   only, so Snake/LightCycles' 0/1/2/3 and Pong's 1/2 both work unchanged.
 00029Er 3               ; - Consuming project defines the zero-page output bytes each routine
 00029Er 3               ;   below documents (JOY_STATE, JOY_STATE2, KB_DIR, KB_DIR_P1, KB_DIR_P2,
-00029Er 3               ;   KB_FIRE, and — only if calling DrainKeyboardSplit — KB_FIRE_P1,
+00029Er 3               ;   KB_FIRE, and - only if calling DrainKeyboardSplit - KB_FIRE_P1,
 00029Er 3               ;   KB_FIRE_P2) before including this file, at whatever address is free.
 00029Er 3               ;
 00029Er 3               ; Exported routines:
@@ -1671,7 +1671,7 @@ Current file: Pong.asm
 00029Er 3               ; - DrainKeyboardCombined  single-player keyboard fallback (WASD or arrows)
 00029Er 3               ; - DrainKeyboardSplit     two-player keyboard fallback (WASD=P1, arrows=P2)
 00029Er 3               ;
-00029Er 3               ; This file intentionally does NOT resolve a final NEXT_DIR/START_PRESSED —
+00029Er 3               ; This file intentionally does NOT resolve a final NEXT_DIR/START_PRESSED -
 00029Er 3               ; that composition (joystick-first priority, A-button-or-space, edge
 00029Er 3               ; detection) is project-specific glue that stays in each game's own
 00029Er 3               ; input.asm, since the exact target variables differ per game (NEXT_DIR vs
@@ -1717,7 +1717,7 @@ Current file: Pong.asm
 00029Er 3               .segment "CART"
 00029Er 3               
 00029Er 3               ; -----------------------------------------------------------------------------
-00029Er 3               ; PollJoyCombined — read both joystick ports and AND-combine them
+00029Er 3               ; PollJoyCombined - read both joystick ports and AND-combine them
 00029Er 3               ; (active-low AND = logical OR of "pressed"), so either port drives a
 00029Er 3               ; single-player game regardless of which one it's plugged into.
 00029Er 3               ; Out: JOY_STATE = combined active-low byte, or $FF (idle) if no GPIO card.
@@ -1739,8 +1739,8 @@ Current file: Pong.asm
 0002B6r 3  60             rts
 0002B7r 3               
 0002B7r 3               ; -----------------------------------------------------------------------------
-0002B7r 3               ; PollJoy1 / PollJoy2 — read a single joystick port, gated on HW_GPIO
-0002B7r 3               ; (ReadJoystick1/2 do not check hardware presence themselves — a floating
+0002B7r 3               ; PollJoy1 / PollJoy2 - read a single joystick port, gated on HW_GPIO
+0002B7r 3               ; (ReadJoystick1/2 do not check hardware presence themselves - a floating
 0002B7r 3               ; bus reads as meaningless data with no GPIO card fitted).
 0002B7r 3               ; Out: JOY_STATE / JOY_STATE2, or $FF (idle) if no GPIO card.
 0002B7r 3               ; Clobbers: A
@@ -1770,7 +1770,7 @@ Current file: Pong.asm
 0002DAr 3  60             rts
 0002DBr 3               
 0002DBr 3               ; -----------------------------------------------------------------------------
-0002DBr 3               ; DrainKeyboardCombined — single-player keyboard fallback: WASD or arrow
+0002DBr 3               ; DrainKeyboardCombined - single-player keyboard fallback: WASD or arrow
 0002DBr 3               ; keys both work, whichever was pressed most recently in this call wins.
 0002DBr 3               ; Drains every pending Chrin character each call (not just one), so a
 0002DBr 3               ; burst typed between polls doesn't leave stale characters for next time.
@@ -1847,7 +1847,7 @@ Current file: Pong.asm
 000313r 3  60             rts
 000314r 3               
 000314r 3               ; -----------------------------------------------------------------------------
-000314r 3               ; DrainKeyboardSplit — two-player keyboard fallback: WASD drives P1 only,
+000314r 3               ; DrainKeyboardSplit - two-player keyboard fallback: WASD drives P1 only,
 000314r 3               ; arrow keys drive P2 only, so one player's keypresses can never move the
 000314r 3               ; other's paddle/cycle. Drains every pending Chrin character ONCE per
 000314r 3               ; call, checking both keysets in the same pass (so both players' presses
@@ -1856,7 +1856,7 @@ Current file: Pong.asm
 000314r 3               ; that never defines DIR_LEFT/DIR_RIGHT (e.g. Pong).
 000314r 3               ; Out: KB_DIR_P1 = last WASD direction seen this call, or KB_DIR_NONE.
 000314r 3               ;      KB_DIR_P2 = last arrow-key direction seen this call, or KB_DIR_NONE.
-000314r 3               ;      KB_FIRE = 1 if EITHER fire key was seen this call, else 0 — kept
+000314r 3               ;      KB_FIRE = 1 if EITHER fire key was seen this call, else 0 - kept
 000314r 3               ;      for callers with only one shared fire/start/pause action (every
 000314r 3               ;      game as of this writing: "did anyone press it" is all that
 000314r 3               ;      matters, mirroring how either joystick's A button already
@@ -1962,7 +1962,7 @@ Current file: Pong.asm
 00036Br 3  60             rts
 00036Cr 3               
 00036Cr 2               
-00036Cr 2               ; Keyboard hold-decay window (PollInput only — see header above). At
+00036Cr 2               ; Keyboard hold-decay window (PollInput only - see header above). At
 00036Cr 2               ; BASE_DELAY (~80ms/tick) 4 ticks is ~320ms of bridged gap; at MIN_DELAY
 00036Cr 2               ; (~30ms/tick, the speed-escalation floor) it's ~120ms. Long enough to
 00036Cr 2               ; ride out a dropped or slow typematic character between polls, short
@@ -1971,12 +1971,12 @@ Current file: Pong.asm
 00036Cr 2               KB_HOLD_TTL_INIT = 4
 00036Cr 2               
 00036Cr 2               ; -----------------------------------------------------------------------------
-00036Cr 2               ; PollMenuInput — title/mode-select screen only. Combines joystick 1 and 2
+00036Cr 2               ; PollMenuInput - title/mode-select screen only. Combines joystick 1 and 2
 00036Cr 2               ; for up/down (MENU_DIR), with WASD/arrow-key keyboard fallback (whichever
 00036Cr 2               ; was pressed most recently) when the joystick shows nothing. A button OR
 00036Cr 2               ; space bar sets START_PRESSED, edge-detected into FIRE_EDGE same as
 00036Cr 2               ; PollInput. No sticky state: MENU_DIR reflects only what's resolved THIS
-00036Cr 2               ; poll (no hold-decay here — the menu doesn't need "feels held", only
+00036Cr 2               ; poll (no hold-decay here - the menu doesn't need "feels held", only
 00036Cr 2               ; gameplay's paddle does).
 00036Cr 2               ; -----------------------------------------------------------------------------
 00036Cr 2               PollMenuInput:
@@ -2036,14 +2036,14 @@ Current file: Pong.asm
 0003BBr 2  60             rts
 0003BCr 2               
 0003BCr 2               ; -----------------------------------------------------------------------------
-0003BCr 2               ; PollInput — gameplay only. Joystick 1 always drives P1; joystick 2 drives
-0003BCr 2               ; P2 in 2P mode, or is OR'd into P1 in 1P mode (see header) — this joystick
+0003BCr 2               ; PollInput - gameplay only. Joystick 1 always drives P1; joystick 2 drives
+0003BCr 2               ; P2 in 2P mode, or is OR'd into P1 in 1P mode (see header) - this joystick
 0003BCr 2               ; routing is unchanged from before keyboard fallback existed. WASD/arrow-key
 0003BCr 2               ; fallback (with hold-decay, see header) layers on top per player, only
 0003BCr 2               ; applied on a tick where that player's joystick shows nothing. NEXT_P1/
-0003BCr 2               ; NEXT_P2 are sticky "last known direction" — only overwritten when a
+0003BCr 2               ; NEXT_P2 are sticky "last known direction" - only overwritten when a
 0003BCr 2               ; joystick bit or a valid keyboard hold is actually seen this poll, never
-0003BCr 2               ; reset to DIR_NONE — Tick (physics.asm) reads them each tick to move the
+0003BCr 2               ; reset to DIR_NONE - Tick (physics.asm) reads them each tick to move the
 0003BCr 2               ; paddles.
 0003BCr 2               ; -----------------------------------------------------------------------------
 0003BCr 2               PollInput:
@@ -2212,7 +2212,7 @@ Current file: Pong.asm
 0004ABr 2               
 0004ABr 1               .include "src/hud.asm"
 0004ABr 2               ; =============================================================================
-0004ABr 2               ;   hud.asm — HUD text/digit-drawing primitives (score, messages, title text)
+0004ABr 2               ;   hud.asm - HUD text/digit-drawing primitives (score, messages, title text)
 0004ABr 2               ; =============================================================================
 0004ABr 2               ;   Graphics I has no Kernal-compatible 40-column text mode, so all HUD text
 0004ABr 2               ;   is drawn tile-by-tile straight into the name table via DrawTile/EraseTile
@@ -2326,15 +2326,15 @@ Current file: Pong.asm
 00051Br 2               
 00051Br 1               .include "src/screens.asm"
 00051Br 2               ; =============================================================================
-00051Br 2               ;   screens.asm — Pong title/mode-select, new-game/serve, win and pause UI
+00051Br 2               ;   screens.asm - Pong title/mode-select, new-game/serve, win and pause UI
 00051Br 2               ; =============================================================================
 00051Br 2               
 00051Br 2               .segment "CART"
 00051Br 2               
 00051Br 2               ; -----------------------------------------------------------------------------
-00051Br 2               ; DrawTitleScreen — draw the title/mode-select screen in Graphics I. Always
+00051Br 2               ; DrawTitleScreen - draw the title/mode-select screen in Graphics I. Always
 00051Br 2               ; a full wipe and redraw, never layered on top of whatever was there before
-00051Br 2               ; (the same discipline NewGame follows) — this runs both at initial boot
+00051Br 2               ; (the same discipline NewGame follows) - this runs both at initial boot
 00051Br 2               ; (over an already-blank screen) and again after a game over (over a live
 00051Br 2               ; win-overlay box and final board state), and only clearing at the latter
 00051Br 2               ; call site would leave this routine unsafe to call from anywhere else.
@@ -2410,7 +2410,7 @@ Current file: Pong.asm
 000599r 2  4C rr rr       jmp DrawString
 00059Cr 2               
 00059Cr 2               ; -----------------------------------------------------------------------------
-00059Cr 2               ; DrawMenuCursor — draw a ">" beside the option GAME_MODE currently selects
+00059Cr 2               ; DrawMenuCursor - draw a ">" beside the option GAME_MODE currently selects
 00059Cr 2               ; (MODE_1P = row 12/"ONE PLAYER", MODE_2P = row 13/"TWO PLAYERS"), erasing
 00059Cr 2               ; both possible positions first so it can never leave a stale second cursor
 00059Cr 2               ; behind regardless of which way the selection just changed.
@@ -2437,9 +2437,9 @@ Current file: Pong.asm
 0005BFr 2  4C rr rr       jmp DrawTile
 0005C2r 2               
 0005C2r 2               ; -----------------------------------------------------------------------------
-0005C2r 2               ; WaitForModeSelect — a real up/down-navigable menu, not a direct-select
+0005C2r 2               ; WaitForModeSelect - a real up/down-navigable menu, not a direct-select
 0005C2r 2               ; key: up always highlights ONE PLAYER (the top option), down always
-0005C2r 2               ; highlights TWO PLAYERS (the bottom option) — with only two options,
+0005C2r 2               ; highlights TWO PLAYERS (the bottom option) - with only two options,
 0005C2r 2               ; "which one am I choosing" is unambiguous from the direction alone, so
 0005C2r 2               ; there's no separate cursor-position state to track beyond GAME_MODE
 0005C2r 2               ; itself. The A button confirms whichever is currently highlighted.
@@ -2496,8 +2496,8 @@ Current file: Pong.asm
 00060Cr 2  60             rts
 00060Dr 2               
 00060Dr 2               ; -----------------------------------------------------------------------------
-00060Dr 2               ; NewGame — reset for a fresh game (also used when restarting after a game
-00060Dr 2               ; over, back through the title/mode-select flow). Does not touch GAME_MODE —
+00060Dr 2               ; NewGame - reset for a fresh game (also used when restarting after a game
+00060Dr 2               ; over, back through the title/mode-select flow). Does not touch GAME_MODE -
 00060Dr 2               ; whichever mode was already selected stays selected. Always a full wipe and
 00060Dr 2               ; redraw, never an incremental one: a sibling cartridge in this ecosystem had
 00060Dr 2               ; a real bug where a partial restart-redraw left stale content on screen.
@@ -2506,7 +2506,7 @@ Current file: Pong.asm
 00060Dr 2  64 42          stz P1_SCORE
 00060Fr 2  64 43          stz P2_SCORE
 000611r 2  64 45          stz NEXT_P1
-000613r 2  64 46          stz NEXT_P2              ; DIR_NONE — KernalInit does not zero this range,
+000613r 2  64 46          stz NEXT_P2              ; DIR_NONE - KernalInit does not zero this range,
 000615r 2  64 5B          stz CPU_TICK               ; so a cold boot could otherwise start with a
 000617r 2                                             ; stale/garbage decision-parity or direction
 000617r 2               
@@ -2546,7 +2546,7 @@ Current file: Pong.asm
 00064Fr 2  60             rts
 000650r 2               
 000650r 2               ; -----------------------------------------------------------------------------
-000650r 2               ; ServeBall — reset the ball to center court with a fresh pseudo-random
+000650r 2               ; ServeBall - reset the ball to center court with a fresh pseudo-random
 000650r 2               ; direction, undoing any speed escalation from the previous rally. Called
 000650r 2               ; from NewGame and, once per point scored, from physics.asm's Tick.
 000650r 2               ; -----------------------------------------------------------------------------
@@ -2594,9 +2594,9 @@ Current file: Pong.asm
 000696r 2  60             rts
 000697r 2               
 000697r 2               ; -----------------------------------------------------------------------------
-000697r 2               ; DrawWinOverlay — draw the win screen: a bordered box on top of the final
+000697r 2               ; DrawWinOverlay - draw the win screen: a bordered box on top of the final
 000697r 2               ; board state, same overlay technique as the sibling Snake cartridge's
-000697r 2               ; game-over screen. Does not change GAME_STATE itself — the caller
+000697r 2               ; game-over screen. Does not change GAME_STATE itself - the caller
 000697r 2               ; (physics.asm's Tick) owns that transition.
 000697r 2               ; -----------------------------------------------------------------------------
 000697r 2               DrawWinOverlay:
@@ -2695,7 +2695,7 @@ Current file: Pong.asm
 00073Dr 2  4C rr rr       jmp Sound_Win
 000740r 2               
 000740r 2               ; -----------------------------------------------------------------------------
-000740r 2               ; DrawPauseMessage — draw a short paused prompt at row 23, just below the
+000740r 2               ; DrawPauseMessage - draw a short paused prompt at row 23, just below the
 000740r 2               ; bottom wall. Matches the sibling Snake cartridge's pause message.
 000740r 2               ; -----------------------------------------------------------------------------
 000740r 2               DrawPauseMessage:
@@ -2777,7 +2777,7 @@ Current file: Pong.asm
 0007F0r 2               .segment "CART"
 0007F0r 2               
 0007F0r 2               ; =============================================================================
-0007F0r 2               ;   physics.asm — paddle movement, ball movement/collision/scoring, CPU AI
+0007F0r 2               ;   physics.asm - paddle movement, ball movement/collision/scoring, CPU AI
 0007F0r 2               ; =============================================================================
 0007F0r 2               ;   Tick is the heart of the game and walks through, in order, every tick:
 0007F0r 2               ;     1. paddle movement (P1 always; P2 from a human or from CpuAI)
@@ -2790,24 +2790,24 @@ Current file: Pong.asm
 0007F0r 2               ;   exclusive) so a ball can bounce off a wall and a paddle in the very same
 0007F0r 2               ;   tick near a corner. Scoring uses a strict less-than/greater-than test
 0007F0r 2               ;   past each paddle's column, one step past the <=/>= test paddle collision
-0007F0r 2               ;   uses at the column itself — that gap is what gives a ball that reaches a
+0007F0r 2               ;   uses at the column itself - that gap is what gives a ball that reaches a
 0007F0r 2               ;   paddle's column without hitting it (a miss) one more tick to visibly sail
 0007F0r 2               ;   past the edge before the point registers.
 0007F0r 2               ;
 0007F0r 2               ;   Both paddles are unconditionally erased-old/drawn-new every tick, even on
-0007F0r 2               ;   ticks where they didn't move — a sibling cartridge in this ecosystem was
+0007F0r 2               ;   ticks where they didn't move - a sibling cartridge in this ecosystem was
 0007F0r 2               ;   bitten by stale trailing tiles when it tried to skip redraws
 0007F0r 2               ;   conditionally, and the extra DrawTile/EraseTile calls are cheap.
 0007F0r 2               ;
 0007F0r 2               ;   SCAN_TMP/SCAN_TMP2 are reused for several unrelated things across this
 0007F0r 2               ;   routine (old paddle row, erase/draw loop counters, paddle-hit row offset,
-0007F0r 2               ;   the hit-this-tick flag) — safe because each use fully completes before
+0007F0r 2               ;   the hit-this-tick flag) - safe because each use fully completes before
 0007F0r 2               ;   the next one starts, but worth flagging since the names alone don't say
 0007F0r 2               ;   what they hold at any given point.
 0007F0r 2               ; =============================================================================
 0007F0r 2               
 0007F0r 2               ; -----------------------------------------------------------------------------
-0007F0r 2               ; UpdateHud — redraw both players' scores and their static labels on the HUD
+0007F0r 2               ; UpdateHud - redraw both players' scores and their static labels on the HUD
 0007F0r 2               ; row. Called by NewGame (screens.asm) to draw the initial "0"/"0", and again
 0007F0r 2               ; here by Tick whenever a score changes.
 0007F0r 2               ; -----------------------------------------------------------------------------
@@ -2842,26 +2842,26 @@ Current file: Pong.asm
 000826r 2  60             rts
 000827r 2               
 000827r 2               ; -----------------------------------------------------------------------------
-000827r 2               ; CpuAI — steers NEXT_P2 toward the ball. Only called when GAME_MODE ==
+000827r 2               ; CpuAI - steers NEXT_P2 toward the ball. Only called when GAME_MODE ==
 000827r 2               ; MODE_1P (Tick gates the call, but this checks again defensively). Only
-000827r 2               ; recomputes its decision on every OTHER call (bit 0 of CPU_TICK) — this
+000827r 2               ; recomputes its decision on every OTHER call (bit 0 of CPU_TICK) - this
 000827r 2               ; halves the CPU's effective reaction speed relative to a human who reacts
 000827r 2               ; every tick, which is what makes it beatable, especially on sharp angles.
 000827r 2               ;
 000827r 2               ; Because a decision only happens every other tick but the paddle still
 000827r 2               ; moves every tick on that stale decision, one "decision cycle" always
-000827r 2               ; moves the paddle 2 rows, never 1 — so an exact BALL_Y == AI_TARGET
+000827r 2               ; moves the paddle 2 rows, never 1 - so an exact BALL_Y == AI_TARGET
 000827r 2               ; alignment test can permanently overshoot a single-row target every
 000827r 2               ; cycle and oscillate forever without ever landing on it exactly. Fixed
 000827r 2               ; with a 3-row deadband (AI_TARGET-1 .. AI_TARGET+1 counts as "aligned")
-000827r 2               ; instead of exact equality — wide enough that a 2-row swing can't jump
+000827r 2               ; instead of exact equality - wide enough that a 2-row swing can't jump
 000827r 2               ; over it, and still narrow enough that the ball stays within the
 000827r 2               ; paddle's 4-row catch range once the AI settles.
 000827r 2               ; -----------------------------------------------------------------------------
 000827r 2               CpuAI:
 000827r 2  A5 3B          lda GAME_MODE
 000829r 2  C9 00          cmp #MODE_1P
-00082Br 2  D0 35          bne @done                      ; belt-and-suspenders — Tick already gates this call
+00082Br 2  D0 35          bne @done                      ; belt-and-suspenders - Tick already gates this call
 00082Dr 2               
 00082Dr 2  E6 5B          inc CPU_TICK
 00082Fr 2  A5 5B          lda CPU_TICK
@@ -2879,7 +2879,7 @@ Current file: Pong.asm
 000842r 2  38             sec
 000843r 2  E5 5A          sbc AI_TARGET                  ; A = BALL_Y - AI_TARGET, >= 0 here
 000845r 2  C9 02          cmp #2
-000847r 2  90 15          bcc @aligned                   ; within [AI_TARGET, AI_TARGET+1] — close enough
+000847r 2  90 15          bcc @aligned                   ; within [AI_TARGET, AI_TARGET+1] - close enough
 000849r 2  A9 02          lda #DIR_DOWN
 00084Br 2  85 46          sta NEXT_P2
 00084Dr 2  80 13          bra @done
@@ -2888,7 +2888,7 @@ Current file: Pong.asm
 000851r 2  38             sec
 000852r 2  E5 3F          sbc BALL_Y                     ; A = AI_TARGET - BALL_Y, > 0 here
 000854r 2  C9 02          cmp #2
-000856r 2  90 06          bcc @aligned                   ; within [AI_TARGET-1, AI_TARGET) — close enough
+000856r 2  90 06          bcc @aligned                   ; within [AI_TARGET-1, AI_TARGET) - close enough
 000858r 2  A9 01          lda #DIR_UP
 00085Ar 2  85 46          sta NEXT_P2
 00085Cr 2  80 04          bra @done
@@ -2899,7 +2899,7 @@ Current file: Pong.asm
 000862r 2  60             rts
 000863r 2               
 000863r 2               ; -----------------------------------------------------------------------------
-000863r 2               ; Tick — advances the game exactly one step. No inputs.
+000863r 2               ; Tick - advances the game exactly one step. No inputs.
 000863r 2               ; -----------------------------------------------------------------------------
 000863r 2               Tick:
 000863r 2               
@@ -2924,7 +2924,7 @@ Current file: Pong.asm
 000874r 2  D0 0A          bne @p1CheckDown
 000876r 2  A5 3C          lda P1_Y
 000878r 2  C9 02          cmp #PADDLE_MIN_Y
-00087Ar 2  F0 12          beq @p1Redraw                   ; already at the clamp — no further move
+00087Ar 2  F0 12          beq @p1Redraw                   ; already at the clamp - no further move
 00087Cr 2  C6 3C          dec P1_Y
 00087Er 2  80 0E          bra @p1Redraw
 000880r 2               @p1CheckDown:
@@ -3016,7 +3016,7 @@ Current file: Pong.asm
 00090Cr 2               ; -----------------------------------------------------------------------------
 00090Cr 2               ; Step 2: compute the ball's candidate next position. BALL_DX/BALL_DY are
 00090Cr 2               ; two's-complement +-1 (DY may also be 0 when flat), so a plain CLC/ADC does
-00090Cr 2               ; the right signed add — ball coordinates stay well inside the 0-31/0-23
+00090Cr 2               ; the right signed add - ball coordinates stay well inside the 0-31/0-23
 00090Cr 2               ; range, so there's no overflow case to worry about.
 00090Cr 2               ; -----------------------------------------------------------------------------
 00090Cr 2  A5 3E          lda BALL_X
@@ -3032,7 +3032,7 @@ Current file: Pong.asm
 00091Ar 2               ; -----------------------------------------------------------------------------
 00091Ar 2               ; Step 3: top/bottom wall collision. If the candidate row would put the ball
 00091Ar 2               ; on or past a wall row, invert BALL_DY and recompute NEW_BALL_Y from the
-00091Ar 2               ; ball's CURRENT (not candidate) Y using the now-inverted delta — this makes
+00091Ar 2               ; ball's CURRENT (not candidate) Y using the now-inverted delta - this makes
 00091Ar 2               ; the ball actually bounce away this same tick instead of re-colliding with
 00091Ar 2               ; the same wall again next tick.
 00091Ar 2               ; -----------------------------------------------------------------------------
@@ -3064,7 +3064,7 @@ Current file: Pong.asm
 000944r 2               @wallDone:
 000944r 2               
 000944r 2               ; -----------------------------------------------------------------------------
-000944r 2               ; Step 4: paddle collision, checked after wall bouncing above is resolved —
+000944r 2               ; Step 4: paddle collision, checked after wall bouncing above is resolved -
 000944r 2               ; a ball can bounce off a wall and a paddle in the very same tick near a
 000944r 2               ; corner, and that's fine; the two checks are independent. Reaching a
 000944r 2               ; paddle's column without landing on one of its 4 rows is a MISS, not a
@@ -3092,11 +3092,11 @@ Current file: Pong.asm
 000958r 2               @p1CheckRow:
 000958r 2  A5 4A          lda NEW_BALL_Y
 00095Ar 2  C5 3C          cmp P1_Y
-00095Cr 2  90 38          bcc @p1Miss                     ; above the paddle's top row — miss
+00095Cr 2  90 38          bcc @p1Miss                     ; above the paddle's top row - miss
 00095Er 2  38             sec
 00095Fr 2  E5 3C          sbc P1_Y
 000961r 2  C9 04          cmp #PADDLE_HEIGHT
-000963r 2  B0 31          bcs @p1Miss                     ; below the paddle's bottom row — miss
+000963r 2  B0 31          bcs @p1Miss                     ; below the paddle's bottom row - miss
 000965r 2  85 4D          sta SCAN_TMP                    ; offset within the paddle, 0-3, top row first
 000967r 2  A9 01          lda #$01
 000969r 2  85 40          sta BALL_DX                     ; bounce away from the paddle: now moving right
@@ -3104,11 +3104,11 @@ Current file: Pong.asm
 00096Dr 2  C9 02          cmp #2
 00096Fr 2  90 06          bcc @p1BounceUp
 000971r 2  A9 01          lda #$01
-000973r 2  85 41          sta BALL_DY                     ; hit the lower half of the paddle — bounce down
+000973r 2  85 41          sta BALL_DY                     ; hit the lower half of the paddle - bounce down
 000975r 2  80 04          bra @p1BounceDone
 000977r 2               @p1BounceUp:
 000977r 2  A9 FF          lda #$FF
-000979r 2  85 41          sta BALL_DY                     ; hit the upper half of the paddle — bounce up
+000979r 2  85 41          sta BALL_DY                     ; hit the upper half of the paddle - bounce up
 00097Br 2               @p1BounceDone:
 00097Br 2  A5 3E          lda BALL_X
 00097Dr 2  18             clc
@@ -3122,7 +3122,7 @@ Current file: Pong.asm
 00098Dr 2  C6 48          dec CUR_DELAY
 00098Fr 2               @p1DelayFloor:
 00098Fr 2  A9 01          lda #1
-000991r 2  85 4E          sta SCAN_TMP2                   ; a hit happened this tick — step 5 skips scoring
+000991r 2  85 4E          sta SCAN_TMP2                   ; a hit happened this tick - step 5 skips scoring
 000993r 2  4C rr rr       jmp @paddleDone
 000996r 2               @p1Miss:
 000996r 2  4C rr rr       jmp @paddleDone
@@ -3138,11 +3138,11 @@ Current file: Pong.asm
 0009A7r 2               @p2CheckRow:
 0009A7r 2  A5 4A          lda NEW_BALL_Y
 0009A9r 2  C5 3D          cmp P2_Y
-0009ABr 2  90 35          bcc @paddleDone                 ; above the paddle's top row — miss
+0009ABr 2  90 35          bcc @paddleDone                 ; above the paddle's top row - miss
 0009ADr 2  38             sec
 0009AEr 2  E5 3D          sbc P2_Y
 0009B0r 2  C9 04          cmp #PADDLE_HEIGHT
-0009B2r 2  B0 2E          bcs @paddleDone                 ; below the paddle's bottom row — miss
+0009B2r 2  B0 2E          bcs @paddleDone                 ; below the paddle's bottom row - miss
 0009B4r 2  85 4D          sta SCAN_TMP
 0009B6r 2  A9 FF          lda #$FF
 0009B8r 2  85 40          sta BALL_DX                     ; bounce away from the paddle: now moving left
@@ -3175,7 +3175,7 @@ Current file: Pong.asm
 0009E2r 2               ; -----------------------------------------------------------------------------
 0009E2r 2               ; Step 5: scoring, but only if step 4 did NOT just register a paddle hit
 0009E2r 2               ; this tick (SCAN_TMP2 is the hit-this-tick flag set above). Note the strict
-0009E2r 2               ; </> here versus the <=/>= paddle collision used above at the same column —
+0009E2r 2               ; </> here versus the <=/>= paddle collision used above at the same column -
 0009E2r 2               ; a miss that merely reached the column needs one more tick to actually
 0009E2r 2               ; cross the edge before it counts as a score.
 0009E2r 2               ; -----------------------------------------------------------------------------
@@ -3186,7 +3186,7 @@ Current file: Pong.asm
 0009E9r 2               
 0009E9r 2  A5 49          lda NEW_BALL_X
 0009EBr 2  C9 02          cmp #P1_X
-0009EDr 2  90 03          bcc @p2Scores                   ; NEW_BALL_X < P1_X — missed the left paddle
+0009EDr 2  90 03          bcc @p2Scores                   ; NEW_BALL_X < P1_X - missed the left paddle
 0009EFr 2  4C rr rr       jmp @checkRightScore
 0009F2r 2               @p2Scores:
 0009F2r 2  E6 43          inc P2_SCORE
@@ -3194,7 +3194,7 @@ Current file: Pong.asm
 0009F7r 2  20 rr rr       jsr UpdateHud
 0009FAr 2  A5 3F          lda BALL_Y
 0009FCr 2  A6 3E          ldx BALL_X
-0009FEr 2  20 rr rr       jsr EraseTile                   ; erase the ball's OLD position — it never reached NEW_BALL_*
+0009FEr 2  20 rr rr       jsr EraseTile                   ; erase the ball's OLD position - it never reached NEW_BALL_*
 000A01r 2  A5 43          lda P2_SCORE
 000A03r 2  C9 0B          cmp #WIN_SCORE
 000A05r 2  90 08          bcc @p2NotWin
@@ -3209,7 +3209,7 @@ Current file: Pong.asm
 000A13r 2               @checkRightScore:
 000A13r 2  A5 49          lda NEW_BALL_X
 000A15r 2  C9 1E          cmp #(P2_X+1)
-000A17r 2  B0 03          bcs @p1Scores                   ; NEW_BALL_X > P2_X — missed the right paddle
+000A17r 2  B0 03          bcs @p1Scores                   ; NEW_BALL_X > P2_X - missed the right paddle
 000A19r 2  4C rr rr       jmp @commitBall
 000A1Cr 2               @p1Scores:
 000A1Cr 2  E6 42          inc P1_SCORE
@@ -3230,7 +3230,7 @@ Current file: Pong.asm
 000A3Cr 2  60             rts
 000A3Dr 2               
 000A3Dr 2               ; -----------------------------------------------------------------------------
-000A3Dr 2               ; Step 6: no score this tick — commit the candidate position. Reached from
+000A3Dr 2               ; Step 6: no score this tick - commit the candidate position. Reached from
 000A3Dr 2               ; every non-scoring path above (straight flight, a wall bounce, a paddle
 000A3Dr 2               ; bounce, or a miss that hasn't crossed the edge yet), always using whatever
 000A3Dr 2               ; NEW_BALL_X/NEW_BALL_Y ended up being after any bounce recompute above.
@@ -3252,7 +3252,7 @@ Current file: Pong.asm
 000A55r 2  60             rts
 000A56r 2               
 000A56r 2               ; =============================================================================
-000A56r 2               ;   Data — HUD label strings (null-terminated, drawn via DrawString)
+000A56r 2               ;   Data - HUD label strings (null-terminated, drawn via DrawString)
 000A56r 2               ; =============================================================================
 000A56r 2               P1Label:
 000A56r 2  50 31 3A 00    .byte "P1:", 0
@@ -3261,7 +3261,7 @@ Current file: Pong.asm
 000A5Er 2               
 000A5Er 1               
 000A5Er 1               ; =============================================================================
-000A5Er 1               ;   CartReset — cartridge entry point
+000A5Er 1               ;   CartReset - cartridge entry point
 000A5Er 1               ; =============================================================================
 000A5Er 1               CartReset:
 000A5Er 1  A2 FF          ldx #$ff
@@ -3337,7 +3337,7 @@ Current file: Pong.asm
 000AC5r 1  4C rr rr       jmp MainLoop
 000AC8r 1               
 000AC8r 1               ; =============================================================================
-000AC8r 1               ;   IRQ / NMI handlers — cartridge owns the vectors, so it must supply these.
+000AC8r 1               ;   IRQ / NMI handlers - cartridge owns the vectors, so it must supply these.
 000AC8r 1               ;   Both just dispatch through the RAM vectors KernalInit already configured
 000AC8r 1               ;   (default keyboard-scanning IRQ handler, no-op NMI).
 000AC8r 1               ; =============================================================================
@@ -3349,7 +3349,7 @@ Current file: Pong.asm
 000ACBr 1  6C 04 03       jmp (NMI_PTR)
 000ACEr 1               
 000ACEr 1               ; =============================================================================
-000ACEr 1               ;   CPU Vectors — cart owns $FFFA-$FFFF
+000ACEr 1               ;   CPU Vectors - cart owns $FFFA-$FFFF
 000ACEr 1               ; =============================================================================
 000ACEr 1               
 000ACEr 1               .segment "VECTORS"

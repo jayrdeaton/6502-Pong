@@ -1,5 +1,5 @@
 ; =============================================================================
-;   vdp.asm — TMS9918 Graphics I mode setup and drawing primitives
+;   vdp.asm - TMS9918 Graphics I mode setup and drawing primitives
 ; =============================================================================
 ;   Port protocol (from 6502.inc, verified against the live BIOS source):
 ;     Set VRAM write address: addr_lo -> VC_REG, then (addr_hi | $40) -> VC_REG
@@ -9,17 +9,17 @@
 ;   two-byte write-latch that address-set and register-set writes depend on.
 ;   An interrupt landing between the two bytes of a VC_REG write (or between
 ;   an address-set and the data write that follows it) desyncs every VDP
-;   write after that point, scrambling the screen — invisible in headless
+;   write after that point, scrambling the screen - invisible in headless
 ;   turbo-speed testing but routine at real frame rates. Every VDP write
 ;   sequence in this file is wrapped in PHP / SEI ... PLP (not raw SEI/CLI,
-;   which doesn't compose when one protected routine calls another — nesting
+;   which doesn't compose when one protected routine calls another - nesting
 ;   PHP/SEI/PLP is safe, nesting raw SEI/CLI is not).
 ; =============================================================================
 
 .segment "CART"
 
 ; -----------------------------------------------------------------------------
-; VdpWriteReg — write one VDP mode register
+; VdpWriteReg - write one VDP mode register
 ; In: A = value, X = register number (0-7)
 ; -----------------------------------------------------------------------------
 VdpWriteReg:
@@ -33,7 +33,7 @@ VdpWriteReg:
   rts
 
 ; -----------------------------------------------------------------------------
-; VdpSetAddr — set the VRAM read/write pointer
+; VdpSetAddr - set the VRAM read/write pointer
 ; In: A = address low byte, X = address high byte
 ; -----------------------------------------------------------------------------
 VdpSetAddr:
@@ -47,7 +47,7 @@ VdpSetAddr:
   rts
 
 ; -----------------------------------------------------------------------------
-; ComputeOffset — compute row*32+col into OFFSET_LO/OFFSET_HI
+; ComputeOffset - compute row*32+col into OFFSET_LO/OFFSET_HI
 ; In: A = row (0-23), X = col (0-31)
 ; Clobbers: A, Y
 ; -----------------------------------------------------------------------------
@@ -70,21 +70,21 @@ ComputeOffset:
   rts
 
 ; -----------------------------------------------------------------------------
-; VdpSetOffsetAddr — point the VRAM write pointer at name-table offset
+; VdpSetOffsetAddr - point the VRAM write pointer at name-table offset
 ; OFFSET_LO/OFFSET_HI (name table base is $0000, so address == offset)
 ; -----------------------------------------------------------------------------
 VdpSetOffsetAddr:
   lda OFFSET_LO
   ldx OFFSET_HI
-  jmp VdpSetAddr        ; tail call — VdpSetAddr's rts returns to our caller
+  jmp VdpSetAddr        ; tail call - VdpSetAddr's rts returns to our caller
 
 ; -----------------------------------------------------------------------------
-; DrawTile — draw a tile code into the name table at (row,col)
+; DrawTile - draw a tile code into the name table at (row,col)
 ; In: A = row, X = col, Y = tile code
 ;
 ; Also atomic end-to-end (not just the address-set half): an interrupt
 ; landing between the address-set and the data write is only harmless if
-; nothing else touches the VDP in between, which we can't assume — same
+; nothing else touches the VDP in between, which we can't assume - same
 ; reasoning as VdpWriteReg above.
 ; -----------------------------------------------------------------------------
 DrawTile:
@@ -100,7 +100,7 @@ DrawTile:
   rts
 
 ; -----------------------------------------------------------------------------
-; EraseTile — draw TILE_BLANK at (row,col)
+; EraseTile - draw TILE_BLANK at (row,col)
 ; In: A = row, X = col
 ; -----------------------------------------------------------------------------
 EraseTile:
@@ -108,7 +108,7 @@ EraseTile:
   jmp DrawTile
 
 ; -----------------------------------------------------------------------------
-; ClearScreen — fill all 768 name-table cells (32x24) with TILE_BLANK
+; ClearScreen - fill all 768 name-table cells (32x24) with TILE_BLANK
 ; -----------------------------------------------------------------------------
 ClearScreen:
   php
@@ -129,7 +129,7 @@ ClearScreen:
   rts
 
 ; -----------------------------------------------------------------------------
-; WriteTilePatterns — copy the four custom 8x8 patterns into VRAM
+; WriteTilePatterns - copy the four custom 8x8 patterns into VRAM
 ; -----------------------------------------------------------------------------
 WriteTilePatterns:
   php
@@ -181,7 +181,7 @@ WriteTilePatterns:
   rts
 
 ; -----------------------------------------------------------------------------
-; DrawWalls — draw the top and bottom walls across all 32 columns. Unlike a
+; DrawWalls - draw the top and bottom walls across all 32 columns. Unlike a
 ; bordered game there are NO side walls: columns 0 and 31 on the playable
 ; rows stay blank, since that's where the ball exits to score.
 ; -----------------------------------------------------------------------------
@@ -205,7 +205,7 @@ DrawWalls:
   rts
 
 ; -----------------------------------------------------------------------------
-; DrawBoxFrame — draw a TILE_FRAME outline around the win-overlay box
+; DrawBoxFrame - draw a TILE_FRAME outline around the win-overlay box
 ; -----------------------------------------------------------------------------
 DrawBoxFrame:
   stz SCAN_TMP
@@ -254,7 +254,7 @@ DrawBoxFrame:
   rts
 
 ; -----------------------------------------------------------------------------
-; ClearBoxInterior — blank the win-overlay box's interior (excludes its
+; ClearBoxInterior - blank the win-overlay box's interior (excludes its
 ; 1-tile frame border)
 ; -----------------------------------------------------------------------------
 ClearBoxInterior:
@@ -285,7 +285,7 @@ ClearBoxInterior:
   rts
 
 ; -----------------------------------------------------------------------------
-; InitGraphicsI — switch the VDP into Graphics I mode and build the screen
+; InitGraphicsI - switch the VDP into Graphics I mode and build the screen
 ; -----------------------------------------------------------------------------
 InitGraphicsI:
   lda HW_PRESENT
@@ -296,10 +296,10 @@ InitGraphicsI:
   ldy #>NoVideoMsg
   jsr PrintStr
 @haltLoop:
-  bra @haltLoop            ; plain 65C02 has no WAI — spin forever instead
+  bra @haltLoop            ; plain 65C02 has no WAI - spin forever instead
 
 @haveVideo:
-  php                      ; outer critical section for the whole setup —
+  php                      ; outer critical section for the whole setup -
   sei                      ; covers the inline register/color-table writes
                             ; below that aren't wrapped by a called routine
   lda #$80
@@ -371,7 +371,7 @@ InitGraphicsI:
 
   jsr WriteTilePatterns
   jsr ClearScreen
-  jsr DrawWalls            ; top+bottom only — no side walls, ball exits there
+  jsr DrawWalls            ; top+bottom only - no side walls, ball exits there
 
   lda #$C0
   ldx #1
