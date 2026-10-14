@@ -83,7 +83,7 @@ make eeprom   # burn to an AT28C256 via a TL866 programmer + minipro
   selects. Always a full `ClearScreen`/`DrawWalls` wipe and redraw before
   drawing anything else, since it's reached both at initial boot (over an
   already-blank screen) and after a game over (over a live win-overlay box
-  and the final board state) — clearing only at one of those call sites
+  and the final board state): clearing only at one of those call sites
   would leave the other showing stale content underneath.
 - **Gameplay:** `src/physics.asm`'s `Tick` moves both paddles, computes
   the ball's candidate next position, checks top/bottom wall bounce and
@@ -101,7 +101,7 @@ make eeprom   # burn to an AT28C256 via a TL866 programmer + minipro
   speed, which is what makes it beatable. Aligning to the ball's row
   exactly (rather than a tolerance band) would make it oscillate forever,
   since a decision that moves the paddle two rows every other tick can
-  jump clean over a one-row-wide target — fixed with a three-row deadband
+  jump clean over a one-row-wide target: fixed with a three-row deadband
   around the target instead of exact equality.
 - **Randomness:** an 8-bit Galois LFSR (`src/rng.asm`), seeded from
   reaction-time entropy while the title screen waits for a mode to be
